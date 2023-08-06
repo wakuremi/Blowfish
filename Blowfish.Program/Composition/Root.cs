@@ -17,7 +17,8 @@ public sealed class Root : IDisposable
     public Root()
     {
         _kernel = new StandardKernel();
-        _kernel.Load<MiscModule>();
+        _kernel.Load<CoreModule>();
+        _kernel.Load<LoggerModule>();
     }
 
     /// <summary>
@@ -49,9 +50,7 @@ public sealed class Root : IDisposable
         return instance;
     }
 
-    /// <summary>
-    ///   Высвобождает ресурсы.
-    /// </summary>
+    /// <inheritdoc />
     public void Dispose()
     {
         _kernel.Dispose();

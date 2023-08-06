@@ -3,52 +3,81 @@ using SFML.Graphics;
 using SFML.System;
 using SFML.Window;
 using System;
+using System.Collections.Immutable;
 
 namespace Blowfish.Program;
 
 /// <summary>
 ///   Игра.
 /// </summary>
-public sealed class Game : IDisposable
+public sealed class Game : IUserInput, IDisposable
 {
-    private readonly ILog _log = LogManager.GetLogger(typeof(Game));
+    private readonly Scene _scene;
+    private readonly ILog _log;
+
+    private ImmutableHashSet<Keyboard.Key> _keys;
+    private ImmutableHashSet<Mouse.Button> _buttons;
+    private Vector2f _pointer;
 
     private readonly RenderWindow _window;
-
-    private readonly Texture _texture;
 
     /// <summary>
     ///   Создает новый экземпляр.
     /// </summary>
     /// 
-    /// <param name="width">Ширина окна.</param>
-    /// <param name="height">Высота окна.</param>
-    /// <param name="title">Заголовок окна.</param>
-    ///
+    /// <param name="scene">Сцена.</param>
+    /// <param name="logProvider">Провайдер журналов.</param>
+    /// 
     /// <exception cref="ArgumentNullException">
-    ///   Указанный заголовок окна <paramref name="title" /> равен <see langword="null" />.
+    ///   1. Указанная сцена <paramref name="scene" /> равна <see langword="null" />.
+    ///   2. Указанный провайдер журналов <paramref name="logProvider" /> равен <see langword="null" />.
     /// </exception>
-    public Game(uint width, uint height, string title)
+    public Game(
+        Scene scene,
+        LogProvider logProvider
+        )
     {
         #region Проверка аргументов ...
 
-        if (title == null)
+        if (scene == null)
         {
-            throw new ArgumentNullException(nameof(title), "Указанный заголовок окна равен 'null'.");
+            throw new ArgumentNullException(nameof(scene), "Указанная сцена равна 'null'.");
+        }
+
+        if (logProvider == null)
+        {
+            throw new ArgumentNullException(nameof(logProvider), "Указанный провайдер журналов равен 'null'.");
         }
 
         #endregion Проверка аргументов ...
 
-        var mode = new VideoMode(width, height);
+        _scene = scene;
+        _log = logProvider.Get();
 
-        _window = new RenderWindow(mode, title);
-        //_window.SetVerticalSyncEnabled(true);
-        _window.Closed += WindowClosed;
+        _keys = ImmutableHashSet<Keyboard.Key>.Empty;
+        _buttons = ImmutableHashSet<Mouse.Button>.Empty;
 
-        _texture = new Texture("Resources/Sprites.png");
+        var mode = new VideoMode(640, 480);
+
+        _window = new RenderWindow(mode, "Blowfish");
+
+        _window.Closed += HandleClosed;
+        _window.KeyPressed += HandleKeyPressed;
+        _window.KeyReleased += HandleKeyReleased;
+        _window.MouseButtonPressed += HandleButtonPressed;
+        _window.MouseButtonReleased += HandleMouseButtonReleased;
+        _window.MouseMoved += HandlePointerMoved;
     }
 
-    private void WindowClosed(object? sender, EventArgs args)
+    #region Обработка событий ...
+
+    /// <summary>
+    ///   Обрабатывает нажатие на кнопку закрыть.
+    /// </summary>
+    ///
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="args">Аргументы события.</param>
+    private void HandleClosed(object? sender, EventArgs args)
     {
         if (sender is Window window)
         {
@@ -57,15 +86,90 @@ public sealed class Game : IDisposable
     }
 
     /// <summary>
+    ///   Обрабатывает нажатие клавиши.
+    /// </summary>
+    ///
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="args">Аргументы события.</param>
+    private void HandleKeyPressed(object? sender, KeyEventArgs args)
+    {
+        if (args != null)
+        {
+            _keys = _keys.Add(args.Code);
+        }
+    }
+
+    /// <summary>
+    ///   Обрабатывает отпускание клавиши.
+    /// </summary>
+    ///
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="args">Аргументы события.</param>
+    private void HandleKeyReleased(object? sender, KeyEventArgs args)
+    {
+        if (args != null)
+        {
+            _keys = _keys.Remove(args.Code);
+        }
+    }
+
+    /// <summary>
+    ///   Обрабатывает нажатие кнопки.
+    /// </summary>
+    ///
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="args">Аргументы события.</param>
+    private void HandleButtonPressed(object? sender, MouseButtonEventArgs args)
+    {
+        if (args != null)
+        {
+            _buttons = _buttons.Add(args.Button);
+        }
+    }
+
+    /// <summary>
+    ///   Обрабатывает отпускание кнопки.
+    /// </summary>
+    ///
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="args">Аргументы события.</param>
+    private void HandleMouseButtonReleased(object? sender, MouseButtonEventArgs args)
+    {
+        if (args != null)
+        {
+            _buttons = _buttons.Remove(args.Button);
+        }
+    }
+
+    /// <summary>
+    ///   Обрабатывает перемещение указателя.
+    /// </summary>
+    ///
+    /// <param name="sender">Отправитель.</param>
+    /// <param name="args">Аргументы события.</param>
+    private void HandlePointerMoved(object? sender, MouseMoveEventArgs args)
+    {
+        if (sender is RenderWindow window
+            && args != null)
+        {
+            var pixel = new Vector2i(args.X, args.Y);
+
+            _pointer = window.MapPixelToCoords(pixel);
+        }
+    }
+
+    #endregion Обработка событий ...
+
+    /// <summary>
     ///   Запускает игровой цикл.
     /// </summary>
     public void Run()
     {
         // 20.0 - среднее количество обновлений в секунду.
-        const double Micros = 1_000_000.0 / 20.0;
+        const float Micros = 1_000_000.0F / 20.0F;
 
         var clock = new Clock();
-        var lag = 0.0;
+        var lag = 0.0F;
 
         var updates = 0;
         var renders = 0;
@@ -108,28 +212,45 @@ public sealed class Game : IDisposable
 
     private void Update()
     {
-
+        _scene.Update(this);
     }
 
-    private void Render(double delta)
+    private void Render(float delta)
     {
         _window.Clear(Color.White);
 
-        var sprite = new Sprite(_texture, new IntRect(0, 0, 16, 16));
-        sprite.Position = new Vector2f(100.0F, 100.0F);
-        sprite.Scale = new Vector2f(2.0F, 2.0F);
-
-        _window.Draw(sprite);
+        _scene.Render(_window, delta);
 
         _window.Display();
     }
 
-    /// <summary>
-    ///   Закрывает и уничтожает окно.
-    /// </summary>
+    /// <inheritdoc />
+    public bool IsKeyPressed(Keyboard.Key key)
+    {
+        return _keys.Contains(key);
+    }
+
+    /// <inheritdoc />
+    public bool IsButtonPressed(Mouse.Button button)
+    {
+        return _buttons.Contains(button);
+    }
+
+    /// <inheritdoc />
+    public Vector2f GetPointer()
+    {
+        return _pointer;
+    }
+
+    /// <inheritdoc />
     public void Dispose()
     {
-        _window.Closed -= WindowClosed;
+        _window.Closed -= HandleClosed;
+        _window.KeyPressed -= HandleKeyPressed;
+        _window.KeyReleased -= HandleKeyReleased;
+        _window.MouseButtonPressed -= HandleButtonPressed;
+        _window.MouseButtonReleased -= HandleMouseButtonReleased;
+        _window.MouseMoved -= HandlePointerMoved;
 
         _window.Close();
         _window.Dispose();

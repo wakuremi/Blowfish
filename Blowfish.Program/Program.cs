@@ -20,8 +20,8 @@ public static class Program
         {
             using (var root = new Root())
             {
-                var game = root.ResolveAndGet<Game>();
-                game.Run();
+                var application = root.ResolveAndGet<Application>();
+                application.Start();
             }
         }
         catch (Exception exception)
@@ -29,6 +29,6 @@ public static class Program
             log.Fatal("Необработанное исключение.", exception);
         }
 
-        log.Info("Завершение работы ...");
+        log.Info("Выход из программы ...");
     }
 }
