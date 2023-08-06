@@ -13,8 +13,22 @@ public sealed class TileSet : IDisposable
     private readonly Texture _texture;
     private readonly int _rows;
     private readonly Sprite _sprite;
-    private readonly int _tileWidth;
-    private readonly int _tileHeight;
+
+    /// <summary>
+    ///   Возвращает ширину тайла.
+    /// </summary>
+    public int TileWidth
+    {
+        get;
+    }
+
+    /// <summary>
+    ///   Возвращает высоту тайла.
+    /// </summary>
+    public int TileHeight
+    {
+        get;
+    }
 
     /// <summary>
     ///   Создает новый экземпляр.
@@ -90,8 +104,8 @@ public sealed class TileSet : IDisposable
 
         _sprite = new Sprite(_texture);
 
-        _tileWidth = tileWidth;
-        _tileHeight = tileHeight;
+        TileWidth = tileWidth;
+        TileHeight = tileHeight;
     }
 
     /// <summary>
@@ -100,10 +114,8 @@ public sealed class TileSet : IDisposable
     ///
     /// <param name="target">Место отрисовки.</param>
     /// <param name="tileIndex">Порядковый номер тайла.</param>
-    /// <param name="x">Позиция отрисовки по оси X.</param>
-    /// <param name="y">Позиция отрисовки по оси Y.</param>
-    /// <param name="width">Ширина отрисовки.</param>
-    /// <param name="height">Высота отрисовки.</param>
+    /// <param name="position">Позиция отрисовки.</param>
+    /// <param name="scale">Масштаб отрисовки.</param>
     ///
     /// <exception cref="ArgumentNullException">
     ///   Указанное место отрисовки <paramref name="target" /> равно <see langword="null" />.
@@ -111,10 +123,8 @@ public sealed class TileSet : IDisposable
     public void Draw(
         RenderTarget target,
         int tileIndex,
-        float x,
-        float y,
-        float width,
-        float height
+        Vector2f position,
+        Vector2f scale
         )
     {
         #region Проверка аргументов ...
@@ -133,14 +143,14 @@ public sealed class TileSet : IDisposable
         var col = tileIndex % _rows;
 
         _sprite.TextureRect = new IntRect(
-            row * _tileWidth,
-            col * _tileHeight,
-            _tileWidth,
-            _tileHeight
+            row * TileWidth,
+            col * TileHeight,
+            TileWidth,
+            TileHeight
             );
 
-        _sprite.Position = new Vector2f(x, y);
-        _sprite.Scale = new Vector2f(width / _tileWidth, height / _tileHeight);
+        _sprite.Position = position;
+        _sprite.Scale = scale;
 
         target.Draw(_sprite);
     }

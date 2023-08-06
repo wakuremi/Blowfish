@@ -8,30 +8,30 @@ namespace Blowfish.Program;
 /// </summary>
 public sealed class Application
 {
-    private readonly Game _game;
+    private readonly GameWindow _window;
     private readonly ILog _log;
 
     /// <summary>
     ///   Создает новый экземпляр.
     /// </summary>
     ///
-    /// <param name="game">Игра.</param>
+    /// <param name="window">Игровое окно.</param>
     /// <param name="logProvider">Провайдер журналов.</param>
     ///
     /// <exception cref="ArgumentNullException">
-    ///   1. Указанная игра <paramref name="game" /> равна <see langword="null" />.
+    ///   1. Указанное игровое окно <paramref name="window" /> равно <see langword="null" />.
     ///   2. Указанный провайдер журналов <paramref name="logProvider" /> равен <see langword="null" />.
     /// </exception>
     public Application(
-        Game game,
+        GameWindow window,
         LogProvider logProvider
         )
     {
         #region Проверка аргументов ...
 
-        if (game == null)
+        if (window == null)
         {
-            throw new ArgumentNullException(nameof(game), "Указанная игра равна 'null'.");
+            throw new ArgumentNullException(nameof(window), "Указанное игровое окно равно 'null'.");
         }
 
         if (logProvider == null)
@@ -41,7 +41,7 @@ public sealed class Application
 
         #endregion Проверка аргументов ...
 
-        _game = game;
+        _window = window;
         _log = logProvider.Get();
     }
 
@@ -52,7 +52,7 @@ public sealed class Application
     {
         _log.Info("Приложение запущено.");
 
-        _game.Run();
+        _window.Wait();
 
         _log.Info("Приложение остановлено.");
     }

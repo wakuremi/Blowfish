@@ -1,89 +1,132 @@
-﻿using log4net;
-using SFML.Graphics;
-using SFML.System;
-using SFML.Window;
+﻿using SFML.System;
 using System;
+using System.Collections.Immutable;
 
 namespace Blowfish.Program;
 
-public sealed class Scene : IDisposable
+/// <summary>
+///   Сцена.
+/// </summary>
+public sealed class Scene
 {
-    private readonly ILog _log;
+    private readonly IEntityRenderer _renderer;
+    private readonly EntityStage _stage;
 
-    private readonly TileSet? _tileSet;
+    private ImmutableList<IEntitySnapshot> _snapshots;
+    private ImmutableDictionary<Guid, Vector2f> _positions;
 
-    private Vector2f _pos0;
-    private Vector2f _pos;
-
+    /// <summary>
+    ///   Создает новый экземпляр.
+    /// </summary>
+    ///
+    /// <param name="renderer">Рендерер сущностей.</param>
+    /// <param name="stage">Стейдж.</param>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   1. Указанный рендерер сущностей <paramref name="renderer" /> равен <see langword="null" />.
+    ///   2. Указанный стейдж <paramref name="stage" /> равен <see langword="null" />.
+    /// </exception>
     public Scene(
-        LogProvider logProvider
+        IEntityRenderer renderer,
+        EntityStage stage
         )
     {
         #region Проверка аргументов ...
 
-        if (logProvider == null)
+        if (renderer == null)
         {
-            throw new ArgumentNullException(nameof(logProvider));
+            throw new ArgumentNullException(nameof(renderer), "Указанный рендерер сущностей равен 'null'.");
+        }
+
+        if (stage == null)
+        {
+            throw new ArgumentNullException(nameof(stage), "Указанный стейдж равен 'null'.");
         }
 
         #endregion Проверка аргументов ...
 
-        _log = logProvider.Get();
+        _renderer = renderer;
+        _stage = stage;
 
-        try
-        {
-            _tileSet = new TileSet(16, 16, "Resources/Sprites.png");
-        }
-        catch (Exception exception)
-        {
-            _log.Error("Ошибка создания набора тайлов.", exception);
-        }
+        _snapshots = ImmutableList<IEntitySnapshot>.Empty;
+        _positions = ImmutableDictionary<Guid, Vector2f>.Empty;
     }
 
-    public void Update(IUserInput input)
+    /// <summary>
+    ///   Выполняет обновление.
+    /// </summary>
+    ///
+    /// <param name="context">Контекст обновления.</param>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанный контекст обновления <paramref name="context" /> равен <see langword="null" />.
+    /// </exception>
+    public void Update(UpdateContext context)
     {
         #region Проверка аргументов ...
 
-        if (input == null)
+        if (context == null)
         {
-            throw new ArgumentNullException(nameof(input), "Указанный пользовательский ввод равен 'null'.");
+            throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
         }
 
         #endregion Проверка аргументов ...
 
-        _pos0 = _pos;
+        _positions = _snapshots.ToImmutableDictionary(x => x.EntityGuid, x => x.Position);
 
-        if (input.IsButtonPressed(Mouse.Button.Left))
-        {
-            _pos = input.GetPointer();
-        }
+        _snapshots = _stage.Update(context);
     }
 
-    public void Render(RenderTarget target, float delta)
+    /// <summary>
+    ///   Выполняет отрисовку.
+    /// </summary>
+    ///
+    /// <param name="context">Контекст отрисовки.</param>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанный контекст отрисовки <paramref name="context" /> равен <see langword="null" />.
+    /// </exception>
+    public void Render(RenderContext context)
     {
         #region Проверка аргументов ...
 
-        if (target == null)
+        if (context == null)
         {
-            throw new ArgumentNullException(nameof(target), "Указанное место отрисовки равно 'null'.");
+            throw new ArgumentNullException(nameof(context), "Указанный отрисовки обновления равен 'null'.");
         }
 
         #endregion Проверка аргументов ...
 
-        var ix = _pos0.X + (_pos.X - _pos0.X) * delta;
-        var iy = _pos0.Y + (_pos.Y - _pos0.Y) * delta;
-
-        if (_tileSet != null)
+        foreach (var snapshot in _snapshots)
         {
-            _tileSet.Draw(target, 5, ix, iy, 100.0F, 100.0F);
+            Render(context, snapshot);
         }
     }
 
-    public void Dispose()
+    /// <summary>
+    ///   Рисует сущность.
+    /// </summary>
+    ///
+    /// <param name="context">Контекст отрисовки.</param>
+    /// <param name="snapshot">Снимок сущности.</param>
+    ///
+    /// <exception cref="NullReferenceException">
+    ///   1. Указанный контекст отрисовки <paramref name="context" /> равен <see langword="null" />.
+    ///   2. Указанный снимок сущности <paramref name="snapshot" /> равен <see langword="null" />.
+    /// </exception>
+    private void Render(RenderContext context, IEntitySnapshot snapshot)
     {
-        if (_tileSet != null)
+        Vector2f intermediate;
+
+        if (_positions.TryGetValue(snapshot.EntityGuid, out var position))
         {
-            _tileSet.Dispose();
+            intermediate = position + (snapshot.Position - position) * context.Delta;
         }
+        else
+        {
+            intermediate = snapshot.Position;
+        }
+
+        _renderer.Render(context, snapshot, intermediate);
     }
 }
