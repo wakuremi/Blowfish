@@ -10,9 +10,11 @@ public sealed class MiscModule : NinjectModule
 
     public override void Load()
     {
-        _ = Bind<Form1>()
+        _ = Bind<Game>()
             .ToSelf()
             .InSingletonScope()
-            ;
+            .WithConstructorArgument("width", 640U)
+            .WithConstructorArgument("height", 480U)
+            .WithConstructorArgument("title", "Game");
     }
 }
