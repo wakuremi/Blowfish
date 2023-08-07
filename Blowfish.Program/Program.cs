@@ -1,4 +1,5 @@
-﻿using Blowfish.Program.Composition;
+﻿using Blowfish.Framework;
+using Blowfish.Program.Composition;
 using log4net;
 using log4net.Config;
 using System;
@@ -16,12 +17,14 @@ public static class Program
 
         var log = LogManager.GetLogger(typeof(Program));
 
+        log.Info("Запуск приложения ...");
+
         try
         {
             using (var root = new Root())
             {
-                var application = root.ResolveAndGet<Application>();
-                application.Start();
+                var application = root.Get<Application>();
+                application.Run();
             }
         }
         catch (Exception exception)
@@ -29,6 +32,8 @@ public static class Program
             log.Fatal("Необработанное исключение.", exception);
         }
 
-        log.Info("Выход из программы ...");
+        log.Info("Приложение остановлено.");
+
+        LogManager.Shutdown();
     }
 }

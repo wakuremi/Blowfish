@@ -1,22 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ninject" Version="3.3.6" />
-    <PackageReference Include="ninject.extensions.conventions" Version="3.3.0" />
+    <None Remove="Assets\Sprites.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Sprites.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Blowfish.Common\Blowfish.Common.csproj" />
     <ProjectReference Include="..\Blowfish.Engine\Blowfish.Engine.csproj" />
-    <ProjectReference Include="..\Blowfish.Game\Blowfish.Game.csproj" />
-    <ProjectReference Include="..\Blowfish.Framework.Sfml\Blowfish.Framework.Sfml.csproj" />
     <ProjectReference Include="..\Blowfish.Framework\Blowfish.Framework.csproj" />
-    <ProjectReference Include="..\Blowfish.Logging.Log4Net\Blowfish.Logging.Log4Net.csproj" />
     <ProjectReference Include="..\Blowfish.Logging\Blowfish.Logging.csproj" />
   </ItemGroup>
 

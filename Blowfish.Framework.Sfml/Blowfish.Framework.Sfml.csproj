@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blowfish.Common\Blowfish.Common.csproj" />
+    <ProjectReference Include="..\Blowfish.Framework\Blowfish.Framework.csproj" />
+    <ProjectReference Include="..\Blowfish.Logging\Blowfish.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SFML.Net" Version="2.5.1" />
+  </ItemGroup>
+
+</Project>

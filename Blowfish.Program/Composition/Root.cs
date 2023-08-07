@@ -12,17 +12,20 @@ public sealed class Root : IDisposable
     private readonly StandardKernel _kernel;
 
     /// <summary>
-    ///   Создает новый экземпляр.
+    ///   Создает корень композиции.
     /// </summary>
     public Root()
     {
         _kernel = new StandardKernel();
-        _kernel.Load<CoreModule>();
-        _kernel.Load<LoggerModule>();
+        _kernel.Load<CommonModule>();
+        _kernel.Load<EngineModule>();
+        _kernel.Load<FrameworkModule>();
+        _kernel.Load<GameModule>();
+        _kernel.Load<LoggingModule>();
     }
 
     /// <summary>
-    ///   Резолвит и возвращает объект указанного типа.
+    ///   Возвращает объект указанного типа.
     /// </summary>
     ///
     /// <typeparam name="T">Тип объекта.</typeparam>
@@ -32,9 +35,9 @@ public sealed class Root : IDisposable
     /// </returns>
     ///
     /// <exception cref="InvalidOperationException">
-    ///   Ошибка резолвинга.
+    ///   Ошибка при резолвинге.
     /// </exception>
-    public T ResolveAndGet<T>()
+    public T Get<T>()
     {
         T instance;
 
@@ -44,7 +47,7 @@ public sealed class Root : IDisposable
         }
         catch (Exception exception)
         {
-            throw new InvalidOperationException("Ошибка резолвинга.", exception);
+            throw new InvalidOperationException("Ошибка при резолвинге.", exception);
         }
 
         return instance;
