@@ -10,7 +10,7 @@ public sealed class PreviousLocationComponentSnapshot : IComponentSnapshot
     /// <summary>
     ///   Возвращает позицию по оси X.
     /// </summary>
-    public float X
+    public float? X
     {
         get;
     }
@@ -18,7 +18,7 @@ public sealed class PreviousLocationComponentSnapshot : IComponentSnapshot
     /// <summary>
     ///   Возвращает позицию по оси Y.
     /// </summary>
-    public float Y
+    public float? Y
     {
         get;
     }
@@ -29,7 +29,7 @@ public sealed class PreviousLocationComponentSnapshot : IComponentSnapshot
     ///
     /// <param name="x">Позиция по оси X.</param>
     /// <param name="y">Позиция по оси Y.</param>
-    public PreviousLocationComponentSnapshot(float x, float y)
+    public PreviousLocationComponentSnapshot(float? x, float? y)
     {
         X = x;
         Y = y;

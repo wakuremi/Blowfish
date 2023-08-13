@@ -7,8 +7,8 @@ using System;
 namespace Blowfish.Game.Entities.Renderers;
 
 /// <inheritdoc cref="IEntityRenderer" />
-[TargetEntityType(EntityTypeEnum.Player)]
-public sealed class PlayerEntityRenderer : IEntityRenderer, IDisposable
+[TargetEntityType(EntityTypeEnum.Bullet)]
+public sealed class BulletEntityRenderer : IEntityRenderer
 {
     private readonly TileSet _tileSet;
 
@@ -17,7 +17,11 @@ public sealed class PlayerEntityRenderer : IEntityRenderer, IDisposable
     /// </summary>
     ///
     /// <param name="tileSetFactory">Фабрика наборов тайлов.</param>
-    public PlayerEntityRenderer(
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанная фабрика наборов тайлов <paramref name="tileSetFactory" /> равна <see langword="null" />.
+    /// </exception>
+    public BulletEntityRenderer(
         ITileSetFactory tileSetFactory
         )
     {
@@ -25,7 +29,7 @@ public sealed class PlayerEntityRenderer : IEntityRenderer, IDisposable
 
         if (tileSetFactory == null)
         {
-            throw new ArgumentNullException(nameof(tileSetFactory), "Указанная фабрика наборов тайлов равна 'null'.");
+            throw new ArgumentException(nameof(tileSetFactory), "Указанная фабрика наборов тайлов равна 'null'.");
         }
 
         #endregion Проверка аргументов ...
@@ -53,12 +57,6 @@ public sealed class PlayerEntityRenderer : IEntityRenderer, IDisposable
         var x = EntityRendererHelper.GetLocationX(snapshot, context.Delta);
         var y = EntityRendererHelper.GetLocationY(snapshot, context.Delta);
 
-        _tileSet.Render(context.Renderer, 0, x, y, 32.0F, 32.0F);
-    }
-
-    /// <inheritdoc />
-    public void Dispose()
-    {
-        _tileSet.Dispose();
+        _tileSet.Render(context.Renderer, 5, x, y, 16.0F, 16.0F);
     }
 }

@@ -39,7 +39,9 @@ public sealed class BlowfishGame : IGame, IDisposable
                     {
                         new EntityTypeComponent(EntityTypeEnum.Player),
                         new LocationComponent() { X = 32.0F, Y = 32.0F },
-                        new PreviousLocationComponent()
+                        new VelocityComponent(),
+                        new PreviousLocationComponent(),
+                        new FireComponent()
                     }
                     )
             }

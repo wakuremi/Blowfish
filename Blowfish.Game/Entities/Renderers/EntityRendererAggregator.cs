@@ -69,14 +69,16 @@ public sealed class EntityRendererAggregator : IEntityRenderer
 
         #endregion Проверка аргументов ...
 
-        var type = snapshot.GetComponentSnapshot<EntityTypeComponent>()?.Type;
+        var entityTypeComponent = snapshot.GetComponentSnapshot<EntityTypeComponent>();
 
-        if (!type.HasValue)
+        if (entityTypeComponent == null)
         {
             throw new NotSupportedException("Указанный снимок сущности не поддерживается: отсутствует компонент типа сущности.");
         }
 
-        if (!_renderers.TryGetValue(type.Value, out var renderer))
+        var type = entityTypeComponent.Type;
+
+        if (!_renderers.TryGetValue(type, out var renderer))
         {
             throw new NotSupportedException("Указанный снимок сущности не поддерживается: отсутствует соответствующий рендерер.");
         }

@@ -23,6 +23,9 @@ internal static class InputHelper
     {
         switch (sfml)
         {
+            case SfmlKey.Space:
+                return NativeKey.Space;
+
             case SfmlKey.W:
                 return NativeKey.W;
 

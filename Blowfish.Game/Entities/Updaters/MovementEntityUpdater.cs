@@ -1,7 +1,6 @@
 ﻿using Blowfish.Common;
 using Blowfish.Engine.Entities;
 using Blowfish.Framework;
-using Blowfish.Framework.Input;
 using Blowfish.Game.Entities.Components;
 using System;
 using System.Collections.Immutable;
@@ -19,13 +18,18 @@ public sealed class MovementEntityUpdater : IEntityUpdater
     }
 
     /// <inheritdoc />
-    public void Update(UpdateContext context, ImmutableList<Entity> entities)
+    public void Update(UpdateContext context, IEntityController controller, ImmutableList<Entity> entities)
     {
         #region Проверка аргументов ...
 
         if (context == null)
         {
             throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
+        }
+
+        if (controller == null)
+        {
+            throw new ArgumentNullException(nameof(controller), "Указанный контроллер сущностей равен 'null'.");
         }
 
         if (entities == null)
@@ -40,37 +44,13 @@ public sealed class MovementEntityUpdater : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        var dx = 0;
-        var dy = 0;
-
-        var keyboard = context.Keyboard;
-
-        if (keyboard.IsKeyPressed(KeyEnum.A))
+        foreach (var entity in entities.With<LocationComponent, VelocityComponent>())
         {
-            dx -= 8;
-        }
+            var locationComponent = entity.GetComponentOrThrow<LocationComponent>();
+            var velocityComponent = entity.GetComponentOrThrow<VelocityComponent>();
 
-        if (keyboard.IsKeyPressed(KeyEnum.D))
-        {
-            dx += 8;
-        }
-
-        if (keyboard.IsKeyPressed(KeyEnum.W))
-        {
-            dy -= 8;
-        }
-
-        if (keyboard.IsKeyPressed(KeyEnum.S))
-        {
-            dy += 8;
-        }
-
-        foreach (var entity in entities.With<LocationComponent>())
-        {
-            var location = entity.GetComponentOrThrow<LocationComponent>();
-
-            location.X += dx;
-            location.Y += dy;
+            locationComponent.X += velocityComponent.X;
+            locationComponent.Y += velocityComponent.Y;
         }
     }
 }

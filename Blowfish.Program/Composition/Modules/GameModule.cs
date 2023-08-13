@@ -2,8 +2,8 @@
 using Blowfish.Framework;
 using Blowfish.Game;
 using Blowfish.Game.Entities.Components;
-using Blowfish.Game.Entities.Snapshots;
 using Blowfish.Game.Entities.Renderers;
+using Blowfish.Game.Entities.Snapshots;
 using Blowfish.Game.Entities.Updaters;
 using Ninject;
 using Ninject.Extensions.Factory;
@@ -60,11 +60,21 @@ public sealed class GameModule : NinjectModule
                 ctx => new IEntityUpdater[]
                 {
                     ctx.Kernel.Get<PreviousLocationEntityUpdater>(),
+                    ctx.Kernel.Get<FireEntityUpdater>(),
+                    ctx.Kernel.Get<UserInputEntityUpdater>(),
                     ctx.Kernel.Get<MovementEntityUpdater>()
                 }
                 );
 
         _ = Bind<PreviousLocationComponent>()
+            .ToSelf()
+            .InSingletonScope();
+
+        _ = Bind<FireEntityUpdater>()
+            .ToSelf()
+            .InSingletonScope();
+
+        _ = Bind<UserInputEntityUpdater>()
             .ToSelf()
             .InSingletonScope();
 
@@ -84,6 +94,11 @@ public sealed class GameModule : NinjectModule
 
         _ = Bind<IEntityRenderer>()
             .To<PlayerEntityRenderer>()
+            .WhenInjectedExactlyInto<EntityRendererAggregator>()
+            .InSingletonScope();
+
+        _ = Bind<IEntityRenderer>()
+            .To<BulletEntityRenderer>()
             .WhenInjectedExactlyInto<EntityRendererAggregator>()
             .InSingletonScope();
     }

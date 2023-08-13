@@ -8,5 +8,10 @@ public enum EntityTypeEnum
     /// <summary>
     ///   Игрок.
     /// </summary>
-    Player
+    Player,
+
+    /// <summary>
+    ///   Пуля.
+    /// </summary>
+    Bullet
 }

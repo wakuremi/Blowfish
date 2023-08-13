@@ -1,6 +1,7 @@
 ﻿using Blowfish.Common;
 using Blowfish.Engine.Entities;
 using Blowfish.Framework;
+using Blowfish.Framework.Input;
 using Blowfish.Game.Entities.Components;
 using System;
 using System.Collections.Immutable;
@@ -8,12 +9,12 @@ using System.Collections.Immutable;
 namespace Blowfish.Game.Entities.Updaters;
 
 /// <inheritdoc cref="IEntityUpdater" />
-public sealed class PreviousLocationEntityUpdater : IEntityUpdater
+public sealed class FireEntityUpdater : IEntityUpdater
 {
     /// <summary>
     ///   Создает апдейтер сущностей.
     /// </summary>
-    public PreviousLocationEntityUpdater()
+    public FireEntityUpdater()
     {
     }
 
@@ -44,13 +45,41 @@ public sealed class PreviousLocationEntityUpdater : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        foreach (var entity in entities.With<LocationComponent, PreviousLocationComponent>())
-        {
-            var locationComponent = entity.GetComponentOrThrow<LocationComponent>();
-            var previousLocationComponent = entity.GetComponentOrThrow<PreviousLocationComponent>();
+        var isSpacePressed = context.Keyboard.IsKeyPressed(KeyEnum.Space);
 
-            previousLocationComponent.X = locationComponent.X;
-            previousLocationComponent.Y = locationComponent.Y;
+        if (!isSpacePressed)
+        {
+            return;
+        }
+
+        var players = entities.With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player);
+
+        foreach (var player in players.With<FireComponent, LocationComponent>())
+        {
+            var fireComponent = player.GetComponentOrThrow<FireComponent>();
+
+            if (fireComponent.Cooldown > 0)
+            {
+                fireComponent.Cooldown--;
+
+                continue;
+            }
+
+            var locationComponent = player.GetComponentOrThrow<LocationComponent>();
+
+            var bullet = new Entity(
+                new IComponent[]
+                {
+                    new EntityTypeComponent(EntityTypeEnum.Bullet),
+                    new PreviousLocationComponent(),
+                    new LocationComponent() { X = locationComponent.X + 8.0F, Y = locationComponent.Y + 8.0F },
+                    new VelocityComponent() { X = 16.0F, Y = 0.0F }
+                }
+                );
+
+            controller.Insert(bullet);
+
+            fireComponent.Cooldown = 20;
         }
     }
 }

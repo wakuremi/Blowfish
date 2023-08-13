@@ -55,7 +55,7 @@ public static class ExtensionsForEntity
     ///   Указанная сущность <paramref name="entity" /> равна <see langword="null" />.
     /// </exception>
     ///
-    /// <exception cref="ArgumentNullException">
+    /// <exception cref="InvalidOperationException">
     ///   Отсутствует компонент указанного типа.
     /// </exception>
     public static T GetComponentOrThrow<T>(this Entity entity) where T : IComponent
@@ -69,13 +69,13 @@ public static class ExtensionsForEntity
 
         #endregion Проверка аргументов ...
 
-        var component = entity.GetComponent<T>();
+        var type = typeof(T);
 
-        if (component == null)
+        if (!entity.Components.TryGetValue(type, out var component))
         {
             throw new InvalidOperationException("Отсутствует компонент указанного типа.");
         }
 
-        return component;
+        return (T) component;
     }
 }

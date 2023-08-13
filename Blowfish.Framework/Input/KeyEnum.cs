@@ -8,6 +8,11 @@ public enum KeyEnum
     // Добавляйте сами, если нужны еще :)
 
     /// <summary>
+    ///   Клавиша "Space".
+    /// </summary>
+    Space,
+
+    /// <summary>
     ///   Клавиша "W".
     /// </summary>
     W,

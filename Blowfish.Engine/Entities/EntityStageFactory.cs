@@ -10,7 +10,7 @@ public sealed class EntityStageFactory
 {
     private readonly IEntityUpdater _updater;
     private readonly IEntityRenderer _renderer;
-    private readonly EntitySnapshotFactory _factory;
+    private readonly EntityContainerFactory _containerFactory;
 
     /// <summary>
     ///   Создает фабрику стейджей сущностей.
@@ -18,17 +18,17 @@ public sealed class EntityStageFactory
     ///
     /// <param name="updater">Апдейтер сущностей.</param>
     /// <param name="renderer">Рендерер сущностей.</param>
-    /// <param name="factory">Фабрика снимков сущностей.</param>
+    /// <param name="containerFactory">Фабрика контейнеров сущностей.</param>
     ///
     /// <exception cref="ArgumentNullException">
     ///   1. Указанный апдейтер сущностей <paramref name="updater" /> равен <see langword="null" />.
     ///   2. Указанный рендерер сущностей <paramref name="renderer" /> равен <see langword="null" />.
-    ///   3. Указанная фабрика снимков сущностей <paramref name="factory" /> равна <see langword="null" />.
+    ///   3. Указанная фабрика контейнеров сущностей <paramref name="containerFactory" /> равна <see langword="null" />.
     /// </exception>
     public EntityStageFactory(
         IEntityUpdater updater,
         IEntityRenderer renderer,
-        EntitySnapshotFactory factory
+        EntityContainerFactory containerFactory
         )
     {
         #region Проверка аргументов ...
@@ -43,16 +43,16 @@ public sealed class EntityStageFactory
             throw new ArgumentNullException(nameof(renderer), "Указанныйы рендерер сущностей равен 'null'.");
         }
 
-        if (factory == null)
+        if (containerFactory == null)
         {
-            throw new ArgumentNullException(nameof(factory), "Указанная фабрика снимков сущностей равна 'null'.");
+            throw new ArgumentNullException(nameof(containerFactory), "Указанная фабрика контейнеров сущностей равна 'null'.");
         }
 
         #endregion Проверка аргументов ...
 
         _updater = updater;
         _renderer = renderer;
-        _factory = factory;
+        _containerFactory = containerFactory;
     }
 
     /// <summary>
@@ -91,7 +91,7 @@ public sealed class EntityStageFactory
         var stage = new EntityStage(
             _updater,
             _renderer,
-            _factory,
+            _containerFactory,
             entities
             );
 

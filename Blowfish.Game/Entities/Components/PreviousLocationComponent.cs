@@ -10,7 +10,7 @@ public sealed class PreviousLocationComponent : IComponent
     /// <summary>
     ///   Возвращает или устанавливает позицию по оси X.
     /// </summary>
-    public float X
+    public float? X
     {
         get;
         set;
@@ -19,7 +19,7 @@ public sealed class PreviousLocationComponent : IComponent
     /// <summary>
     ///   Возвращает или устанавливает позицию по оси Y.
     /// </summary>
-    public float Y
+    public float? Y
     {
         get;
         set;

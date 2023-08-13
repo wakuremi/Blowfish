@@ -50,13 +50,18 @@ public sealed class EntityUpdaterAggregator : IEntityUpdater
     }
 
     /// <inheritdoc />
-    public void Update(UpdateContext context, ImmutableList<Entity> entities)
+    public void Update(UpdateContext context, IEntityController controller, ImmutableList<Entity> entities)
     {
         #region Проверка аргументов ...
 
         if (context == null)
         {
             throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
+        }
+
+        if (controller == null)
+        {
+            throw new ArgumentNullException(nameof(controller), "Указанный контроллер сущностей равен 'null'.");
         }
 
         if (entities == null)
@@ -74,7 +79,7 @@ public sealed class EntityUpdaterAggregator : IEntityUpdater
         // Запускаем апдейтеры в том порядке, в котором они были указаны.
         foreach (var updater in _updaters)
         {
-            updater.Update(context, entities);
+            updater.Update(context, controller, entities);
         }
     }
 }

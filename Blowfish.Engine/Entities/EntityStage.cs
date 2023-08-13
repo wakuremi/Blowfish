@@ -12,8 +12,7 @@ public sealed class EntityStage
 {
     private readonly IEntityUpdater _updater;
     private readonly IEntityRenderer _renderer;
-    private readonly EntitySnapshotFactory _factory;
-    private readonly ImmutableList<Entity> _entities;
+    private readonly EntityContainer _container;
 
     private ImmutableArray<EntitySnapshot> _snapshots;
 
@@ -23,13 +22,13 @@ public sealed class EntityStage
     ///
     /// <param name="updater">Апдейтер сущностей.</param>
     /// <param name="renderer">Рендерер сущностей.</param>
-    /// <param name="factory">Фабрика снимков сущностей.</param>
+    /// <param name="containerFactory">Фабрика контейнеров сущностей.</param>
     /// <param name="entities">Массив сущностей.</param>
     ///
     /// <exception cref="ArgumentNullException">
     ///   1. Указанный апдейтер сущностей <paramref name="updater" /> равен <see langword="null" />.
     ///   2. Указанный рендерер сущностей <paramref name="renderer" /> равен <see langword="null" />.
-    ///   3. Указанная фабрика снимков сущностей <paramref name="factory" /> равна <see langword="null" />.
+    ///   3. Указанная фабрика контейнеров сущностей <paramref name="containerFactory" /> равна <see langword="null" />.
     ///   4. Указанный массив сущностей <paramref name="entities" /> равен <see langword="null" />.
     /// </exception>
     ///
@@ -39,7 +38,7 @@ public sealed class EntityStage
     public EntityStage(
         IEntityUpdater updater,
         IEntityRenderer renderer,
-        EntitySnapshotFactory factory,
+        EntityContainerFactory containerFactory,
         Entity[] entities
         )
     {
@@ -55,9 +54,9 @@ public sealed class EntityStage
             throw new ArgumentNullException(nameof(renderer), "Указанныйы рендерер сущностей равен 'null'.");
         }
 
-        if (factory == null)
+        if (containerFactory == null)
         {
-            throw new ArgumentNullException(nameof(factory), "Указанная фабрика снимков сущностей равна 'null'.");
+            throw new ArgumentNullException(nameof(containerFactory), "Указанная фабрика контейнеров сущностей равна 'null'.");
         }
 
         if (entities == null)
@@ -74,8 +73,14 @@ public sealed class EntityStage
 
         _updater = updater;
         _renderer = renderer;
-        _factory = factory;
-        _entities = entities.ToImmutableList();
+        _container = containerFactory.Create();
+
+        foreach (var entity in entities)
+        {
+            _container.Insert(entity);
+        }
+
+        _ = _container.Commit();
 
         _snapshots = ImmutableArray<EntitySnapshot>.Empty;
     }
@@ -100,18 +105,9 @@ public sealed class EntityStage
 
         #endregion Проверка аргументов ...
 
-        _updater.Update(context, _entities);
+        _updater.Update(context, _container, _container.Entities);
 
-        var builder = ImmutableArray.CreateBuilder<EntitySnapshot>(_entities.Count);
-
-        foreach (var entity in _entities)
-        {
-            var snapshot = _factory.Create(entity);
-
-            builder.Add(snapshot);
-        }
-
-        var snapshots = builder.ToImmutable();
+        var snapshots = _container.Commit();
 
         _ = ImmutableInterlocked.InterlockedExchange(ref _snapshots, snapshots);
     }
