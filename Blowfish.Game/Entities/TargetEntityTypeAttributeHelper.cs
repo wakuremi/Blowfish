@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
 
-namespace Blowfish.Game.Entities.Components;
+namespace Blowfish.Game.Entities;
 
 /// <summary>
 ///   Вспомогательный класс для работы с <see cref="TargetEntityTypeAttribute" />.

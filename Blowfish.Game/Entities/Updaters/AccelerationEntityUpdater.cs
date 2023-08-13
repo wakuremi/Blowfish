@@ -7,12 +7,15 @@ using System.Collections.Immutable;
 namespace Blowfish.Game.Entities.Updaters;
 
 /// <inheritdoc cref="IEntityUpdater" />
-public sealed class PreviousLocationEntityUpdater : IEntityUpdater
+public sealed class AccelerationEntityUpdater : IEntityUpdater
 {
+    private const float MaxVelocityX = 16.0F;
+    private const float MaxVelocityY = 16.0F;
+
     /// <summary>
     ///   Создает апдейтер сущностей.
     /// </summary>
-    public PreviousLocationEntityUpdater()
+    public AccelerationEntityUpdater()
     {
     }
 
@@ -29,12 +32,22 @@ public sealed class PreviousLocationEntityUpdater : IEntityUpdater
         #endregion Проверка аргументов ...
 
         var updatables = entities
-            .WithComponent<PreviousLocationComponent, LocationComponent>();
+            .WithComponent<VelocityComponent, AccelerationComponent>();
 
-        foreach (var (_, previousLocation, location) in updatables)
+        foreach (var (_, velocity, acceleration) in updatables)
         {
-            previousLocation.X = location.X;
-            previousLocation.Y = location.Y;
+            velocity.X += acceleration.X;
+            velocity.Y += acceleration.Y;
+
+            if (velocity.X > MaxVelocityX)
+            {
+                velocity.X = MaxVelocityX;
+            }
+
+            if (velocity.Y > MaxVelocityY)
+            {
+                velocity.Y = MaxVelocityY;
+            }
         }
     }
 }

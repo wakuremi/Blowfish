@@ -10,6 +10,9 @@ namespace Blowfish.Game.Entities.Updaters;
 /// <inheritdoc cref="IEntityUpdater" />
 public sealed class UserInputEntityUpdater : IEntityUpdater
 {
+    private const float AccelerationX = 1.25F;
+    private const float AccelerationY = 1.25F;
+
     /// <summary>
     ///   Создает апдейтер сущностей.
     /// </summary>
@@ -29,37 +32,39 @@ public sealed class UserInputEntityUpdater : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        var x = 0;
-        var y = 0;
+        var x = 0.0F;
+        var y = 0.0F;
 
         var keyboard = context.Keyboard;
 
         if (keyboard.IsKeyPressed(KeyEnum.A))
         {
-            x -= 8;
+            x -= AccelerationX;
         }
 
         if (keyboard.IsKeyPressed(KeyEnum.D))
         {
-            x += 8;
+            x += AccelerationX;
         }
 
         if (keyboard.IsKeyPressed(KeyEnum.W))
         {
-            y -= 8;
+            y -= AccelerationY;
         }
 
         if (keyboard.IsKeyPressed(KeyEnum.S))
         {
-            y += 8;
+            y += AccelerationY;
         }
 
-        var players = entities.With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player);
+        var updatables = entities
+            .With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player)
+            .WithComponent<AccelerationComponent>();
 
-        foreach (var (_, velocity) in players.WithComponent<VelocityComponent>())
+        foreach (var (_, acceleration) in updatables)
         {
-            velocity.X = x;
-            velocity.Y = y;
+            acceleration.X = x;
+            acceleration.Y = y;
         }
     }
 }

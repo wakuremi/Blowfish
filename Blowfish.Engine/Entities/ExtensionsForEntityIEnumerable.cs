@@ -8,7 +8,7 @@ namespace Blowfish.Engine.Entities;
 /// <summary>
 ///   Содержит методы-расширения для <see cref="IEnumerable{T}" />, состоящего из элементов типа <see cref="Entity" />.
 /// </summary>
-public static class EntityIEnumerableExtension
+public static class ExtensionsForEntityIEnumerable
 {
     /// <summary>
     ///   Возвращает из указанного перечня сущности, у которых есть компоненты указанного типа, которые удовлетворяют

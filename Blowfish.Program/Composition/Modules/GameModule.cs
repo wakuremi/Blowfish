@@ -62,6 +62,8 @@ public sealed class GameModule : NinjectModule
                     ctx.Kernel.Get<PreviousLocationEntityUpdater>(),
                     ctx.Kernel.Get<FireEntityUpdater>(),
                     ctx.Kernel.Get<UserInputEntityUpdater>(),
+                    ctx.Kernel.Get<AccelerationEntityUpdater>(),
+                    ctx.Kernel.Get<DecelerationEntityUpdater>(),
                     ctx.Kernel.Get<MovementEntityUpdater>()
                 }
                 );
@@ -75,6 +77,14 @@ public sealed class GameModule : NinjectModule
             .InSingletonScope();
 
         _ = Bind<UserInputEntityUpdater>()
+            .ToSelf()
+            .InSingletonScope();
+
+        _ = Bind<AccelerationEntityUpdater>()
+            .ToSelf()
+            .InSingletonScope();
+
+        _ = Bind<DecelerationEntityUpdater>()
             .ToSelf()
             .InSingletonScope();
 

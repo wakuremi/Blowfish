@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Blowfish.Game.Entities.Components;
+namespace Blowfish.Game.Entities;
 
 /// <summary>
 ///   Атрибут для указания целевого типа сущности.

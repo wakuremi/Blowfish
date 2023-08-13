@@ -1,4 +1,4 @@
-﻿namespace Blowfish.Game.Entities.Components;
+﻿namespace Blowfish.Game.Entities;
 
 /// <summary>
 ///   Тип сущности.

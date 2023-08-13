@@ -36,9 +36,11 @@ public sealed class FireEntityUpdater : IEntityUpdater
             return;
         }
 
-        var players = entities.With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player);
+        var updatables = entities
+            .With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player)
+            .WithComponent<FireComponent, LocationComponent>();
 
-        foreach (var (_, fire, location) in players.WithComponent<FireComponent, LocationComponent>())
+        foreach (var (_, fire, location) in updatables)
         {
             if (fire.Cooldown > 0)
             {

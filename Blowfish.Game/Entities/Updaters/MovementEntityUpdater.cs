@@ -28,7 +28,10 @@ public sealed class MovementEntityUpdater : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        foreach (var (_, location, velocity) in entities.WithComponent<LocationComponent, VelocityComponent>())
+        var updatables = entities
+            .WithComponent<LocationComponent, VelocityComponent>();
+
+        foreach (var (_, location, velocity) in updatables)
         {
             location.X += velocity.X;
             location.Y += velocity.Y;

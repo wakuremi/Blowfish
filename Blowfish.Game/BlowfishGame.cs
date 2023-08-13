@@ -1,5 +1,6 @@
 ﻿using Blowfish.Engine.Entities;
 using Blowfish.Framework;
+using Blowfish.Game.Entities;
 using Blowfish.Game.Entities.Components;
 using Blowfish.Logging;
 using System;
@@ -39,6 +40,7 @@ public sealed class BlowfishGame : IGame, IDisposable
                     {
                         new EntityTypeComponent(EntityTypeEnum.Player),
                         new LocationComponent() { X = 32.0F, Y = 32.0F },
+                        new AccelerationComponent(),
                         new VelocityComponent(),
                         new PreviousLocationComponent(),
                         new FireComponent()
