@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Graphics.Renderables;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics.Renderables;
 using SFML.Graphics;
 using SFML.System;
 using System;
@@ -38,17 +39,13 @@ public sealed class PictureRenderable : IPictureRenderable, Drawable
     /// </exception>
     ///
     /// <exception cref="IOException">
-    ///   1. Ошибка загрузки.
-    ///   2. Недопустимый размер текстуры.
+    ///   Ошибка загрузки.
     /// </exception>
     public PictureRenderable(string filePath)
     {
         #region Проверка аргументов ...
 
-        if (filePath == null)
-        {
-            throw new ArgumentNullException(nameof(filePath), "Указанный путь к файлу равен 'null'.");
-        }
+        Throw.IfNull(filePath);
 
         #endregion Проверка аргументов ...
 
@@ -67,7 +64,7 @@ public sealed class PictureRenderable : IPictureRenderable, Drawable
         {
             _texture.Dispose();
 
-            throw new IOException("Недопустимый размер текстуры.");
+            throw new IOException("Ошибка загрузки: недопустимый размер текстуры.");
         }
 
         _sprite = new Sprite(_texture);

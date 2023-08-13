@@ -3,7 +3,6 @@ using Blowfish.Engine.Entities;
 using Blowfish.Framework;
 using Blowfish.Framework.Input;
 using Blowfish.Game.Entities.Components;
-using System;
 using System.Collections.Immutable;
 
 namespace Blowfish.Game.Entities.Updaters;
@@ -23,25 +22,10 @@ public sealed class FireEntityUpdater : IEntityUpdater
     {
         #region Проверка аргументов ...
 
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
-        }
-
-        if (controller == null)
-        {
-            throw new ArgumentNullException(nameof(controller), "Указанный контроллер сущностей равен 'null'.");
-        }
-
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный список сущностей равен 'null'.");
-        }
-
-        if (entities.HasNull())
-        {
-            throw new ArgumentException("Указанный список сущностей содержит 'null'.", nameof(entities));
-        }
+        Throw.IfNull(context);
+        Throw.IfNull(controller);
+        Throw.IfNull(entities);
+        Throw.IfContainsNull(entities);
 
         #endregion Проверка аргументов ...
 
@@ -54,32 +38,28 @@ public sealed class FireEntityUpdater : IEntityUpdater
 
         var players = entities.With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player);
 
-        foreach (var player in players.With<FireComponent, LocationComponent>())
+        foreach (var (_, fire, location) in players.WithComponent<FireComponent, LocationComponent>())
         {
-            var fireComponent = player.GetComponentOrThrow<FireComponent>();
-
-            if (fireComponent.Cooldown > 0)
+            if (fire.Cooldown > 0)
             {
-                fireComponent.Cooldown--;
-
-                continue;
+                fire.Cooldown--;
             }
+            else
+            {
+                fire.Cooldown = 20;
 
-            var locationComponent = player.GetComponentOrThrow<LocationComponent>();
-
-            var bullet = new Entity(
-                new IComponent[]
-                {
+                var bullet = new Entity(
+                    new IComponent[]
+                    {
                     new EntityTypeComponent(EntityTypeEnum.Bullet),
                     new PreviousLocationComponent(),
-                    new LocationComponent() { X = locationComponent.X + 8.0F, Y = locationComponent.Y + 8.0F },
+                    new LocationComponent() { X = location.X + 8.0F, Y = location.Y + 8.0F },
                     new VelocityComponent() { X = 16.0F, Y = 0.0F }
-                }
-                );
+                    }
+                    );
 
-            controller.Insert(bullet);
-
-            fireComponent.Cooldown = 20;
+                controller.Insert(bullet);
+            }
         }
     }
 }

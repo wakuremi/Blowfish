@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blowfish.Common;
+using System;
 
 namespace Blowfish.Engine.Entities;
 
@@ -24,10 +25,7 @@ public static class ExtensionsForEntitySnapshot
     {
         #region Проверка аргументов ...
 
-        if (snapshot == null)
-        {
-            throw new ArgumentNullException(nameof(snapshot), "Указанная сущность равна 'null'.");
-        }
+        Throw.IfNull(snapshot);
 
         #endregion Проверка аргументов ...
 

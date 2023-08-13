@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Input;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Input;
 using System;
 
 namespace Blowfish.Framework;
@@ -42,15 +43,8 @@ public sealed class UpdateContext
     {
         #region Проверка аргументов ...
 
-        if (keyboard == null)
-        {
-            throw new ArgumentNullException(nameof(keyboard), "Указанная клавиатура равна 'null'.");
-        }
-
-        if (mouse == null)
-        {
-            throw new ArgumentNullException(nameof(mouse), "Указанная мышь равна 'null'.");
-        }
+        Throw.IfNull(keyboard);
+        Throw.IfNull(mouse);
 
         #endregion Проверка аргументов ...
 

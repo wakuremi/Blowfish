@@ -37,15 +37,8 @@ public sealed class EntitySnapshot
     {
         #region Проверка аргументов ...
 
-        if (componentSnapshots == null)
-        {
-            throw new ArgumentNullException(nameof(componentSnapshots), "Указанный список снимков компонентов равен 'null'.");
-        }
-
-        if (componentSnapshots.HasNull())
-        {
-            throw new ArgumentException("Указанный список снимков компонентов содержит 'null'.", nameof(componentSnapshots));
-        }
+        Throw.IfNull(componentSnapshots);
+        Throw.IfContainsNull(componentSnapshots);
 
         #endregion Проверка аргументов ...
 

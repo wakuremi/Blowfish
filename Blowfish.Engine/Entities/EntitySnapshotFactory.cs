@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blowfish.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Blowfish.Engine.Entities;
@@ -25,10 +26,7 @@ public sealed class EntitySnapshotFactory
     {
         #region Проверка аргументов ...
 
-        if (factory == null)
-        {
-            throw new ArgumentNullException(nameof(factory), "Указанная фабрика снимков компонентов равна 'null'.");
-        }
+        Throw.IfNull(factory);
 
         #endregion Проверка аргументов ...
 
@@ -52,10 +50,7 @@ public sealed class EntitySnapshotFactory
     {
         #region Проверка аргументов ...
 
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity), "Указанная сущность равна 'null'.");
-        }
+        Throw.IfNull(entity);
 
         #endregion Проверка аргументов ...
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blowfish.Common;
+using System;
 
 namespace Blowfish.Framework.Graphics.Renderables;
 
@@ -38,15 +39,8 @@ public sealed class CanvasRenderableFactoryArgs : IRenderableFactoryArgs
     {
         #region Проверка аргументов ...
 
-        if (width < 1)
-        {
-            throw new ArgumentException("Указанная ширина меньше 1.");
-        }
-
-        if (height < 1)
-        {
-            throw new ArgumentException("Указанная высота меньше 1.");
-        }
+        Throw.IfLess(width, 1);
+        Throw.IfLess(height, 1);
 
         #endregion Проверка аргументов ...
 

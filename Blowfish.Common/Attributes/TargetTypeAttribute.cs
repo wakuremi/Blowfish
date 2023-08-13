@@ -29,10 +29,7 @@ public sealed class TargetTypeAttribute : Attribute
     {
         #region Проверка аргументов ...
 
-        if (targetType == null)
-        {
-            throw new ArgumentNullException(nameof(targetType), "Указанный целевой тип равен 'null'.");
-        }
+        Throw.IfNull(targetType);
 
         #endregion Проверка аргументов ...
 

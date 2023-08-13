@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blowfish.Common;
+using System;
 
 namespace Blowfish.Framework;
 
@@ -28,15 +29,8 @@ public sealed class Application
     {
         #region Проверка аргументов ...
 
-        if (runnerFactory == null)
-        {
-            throw new ArgumentNullException(nameof(runnerFactory), "Указанная фабрика раннеров равна 'null'.");
-        }
-
-        if (gameFactory == null)
-        {
-            throw new ArgumentNullException(nameof(gameFactory), "Указанная фабрика игр равна 'null'.");
-        }
+        Throw.IfNull(runnerFactory);
+        Throw.IfNull(gameFactory);
 
         #endregion Проверка аргументов ...
 

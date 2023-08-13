@@ -1,6 +1,7 @@
 ﻿using Blowfish.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Blowfish.Engine.Entities;
 
@@ -10,130 +11,8 @@ namespace Blowfish.Engine.Entities;
 public static class EntityIEnumerableExtension
 {
     /// <summary>
-    ///   Возвращает из указанного перечня сущности, которые имеют компоненты указанных типов.
-    /// </summary>
-    ///
-    /// <param name="entities">Перечень сущностей.</param>
-    /// <param name="types">Массив типов.</param>
-    ///
-    /// <returns>
-    ///   Перечень сущностей.
-    /// </returns>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   1. Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
-    ///   2. Указанный массив типов <paramref name="types" /> равен <see langword="null" />.
-    /// </exception>
-    ///
-    /// <exception cref="ArgumentException">
-    ///   Указанный массив типов <paramref name="types" /> содержит <see langword="null" />.
-    /// </exception>
-    public static IEnumerable<Entity> With(this IEnumerable<Entity?> entities, params Type[] types)
-    {
-        #region Проверка аргументов ...
-
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный перечень сущностей равен 'null'.");
-        }
-
-        if (types == null)
-        {
-            throw new ArgumentNullException(nameof(types), "Указанный массив типов равен 'null'.");
-        }
-
-        if (types.HasNull())
-        {
-            throw new ArgumentException("Указанный массив типов содержит 'null'.", nameof(types));
-        }
-
-        #endregion Проверка аргументов ...
-
-        if (types.Length <= 0)
-        {
-            yield break;
-        }
-
-        foreach (var entity in entities)
-        {
-            if (entity == null)
-            {
-                continue;
-            }
-
-            var isSuitable = true;
-
-            foreach (var type in types)
-            {
-                isSuitable &= entity.Components.ContainsKey(type);
-            }
-
-            if (isSuitable)
-            {
-                yield return entity;
-            }
-        }
-    }
-
-    /// <summary>
-    ///   Возвращает из указанного перечня сущности, которые имеют компонент указанного типа.
-    /// </summary>
-    ///
-    /// <typeparam name="T">Тип компонента.</typeparam>
-    ///
-    /// <param name="entities">Перечень сущностей.</param>
-    ///
-    /// <returns>
-    ///   Перечень сущностей.
-    /// </returns>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
-    /// </exception>
-    public static IEnumerable<Entity> With<T>(this IEnumerable<Entity?> entities)
-        where T : IComponent
-    {
-        var t = typeof(T);
-
-        var enumerable = With(entities, t);
-
-        return enumerable;
-    }
-
-    /// <summary>
-    ///   Возвращает из указанного перечня сущности, которые имеют компоненты указанных типов.
-    /// </summary>
-    ///
-    /// <typeparam name="T1">Тип компонента 1.</typeparam>
-    /// <typeparam name="T2">Тип компонента 2.</typeparam>
-    ///
-    /// <param name="entities">Перечень сущностей.</param>
-    ///
-    /// <returns>
-    ///   Перечень сущностей.
-    /// </returns>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
-    /// </exception>
-    ///
-    /// <exception cref="ArgumentException">
-    ///   Указанный массив типов <paramref name="types" /> содержит <see langword="null" />.
-    /// </exception>
-    public static IEnumerable<Entity> With<T1, T2>(this IEnumerable<Entity?> entities)
-        where T1 : IComponent
-        where T2 : IComponent
-    {
-        var t1 = typeof(T1);
-        var t2 = typeof(T2);
-
-        var enumerable = With(entities, t1, t2);
-
-        return enumerable;
-    }
-
-    /// <summary>
-    ///   Возвращает из указанного перечня сущности, которые имеют компонент указанного типа, удовлетворяющий указанному предикату.
+    ///   Возвращает из указанного перечня сущности, у которых есть компоненты указанного типа, которые удовлетворяют
+    ///   указанному предикату (если он указан).
     /// </summary>
     ///
     /// <typeparam name="T">Тип компонента.</typeparam>
@@ -146,45 +25,137 @@ public static class EntityIEnumerableExtension
     /// </returns>
     ///
     /// <exception cref="ArgumentNullException">
-    ///   1. Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
-    ///   2. Указанный предикат <paramref name="predicate" /> равен <see langword="null" />.
+    ///   Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
     /// </exception>
     public static IEnumerable<Entity> With<T>(
         this IEnumerable<Entity?> entities,
-        Func<T, bool> predicate
+        Func<T, bool>? predicate = null
+        )
+        where T : IComponent
+    {
+        return entities
+            .WithComponent(predicate)
+            .Select(x => x.Entity);
+    }
+
+    /// <summary>
+    ///   Возвращает из указанного перечня сущности, у которых есть компоненты указанных типов, которые удовлетворяют
+    ///   указанному предикату (если он указан).
+    /// </summary>
+    ///
+    /// <typeparam name="T1">Тип компонента 1.</typeparam>
+    /// <typeparam name="T2">Тип компонента 2.</typeparam>
+    ///
+    /// <param name="entities">Перечень сущностей.</param>
+    /// <param name="predicate">Предикат.</param>
+    ///
+    /// <returns>
+    ///   Перечень сущностей.
+    /// </returns>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
+    /// </exception>
+    public static IEnumerable<Entity> With<T1, T2>(
+        this IEnumerable<Entity?> entities,
+        Func<T1, T2, bool>? predicate = null
+        )
+        where T1 : IComponent
+        where T2 : IComponent
+    {
+        return entities
+            .WithComponent(predicate)
+            .Select(x => x.Entity);
+    }
+
+    /// <summary>
+    ///   Возвращает из указанного перечня сущности, у которых есть компоненты указанного типа, которые удовлетворяют
+    ///   указанному предикату (если он указан).
+    /// </summary>
+    ///
+    /// <typeparam name="T">Тип компонента.</typeparam>
+    ///
+    /// <param name="entities">Перечень сущностей.</param>
+    /// <param name="predicate">Предикат.</param>
+    ///
+    /// <returns>
+    ///   Перечень сущностей и компонентов указанного типа.
+    /// </returns>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
+    /// </exception>
+    public static IEnumerable<(Entity Entity, T Component)> WithComponent<T>(
+        this IEnumerable<Entity?> entities,
+        Func<T, bool>? predicate = null
         )
         where T : IComponent
     {
         #region Проверка аргументов ...
 
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный перечень сущностей равен 'null'.");
-        }
-
-        if (predicate == null)
-        {
-            throw new ArgumentNullException(nameof(predicate), "Указанный предикат равен 'null'.");
-        }
+        Throw.IfNull(entities);
 
         #endregion Проверка аргументов ...
 
         foreach (var entity in entities)
         {
-            if (entity == null)
+            if (entity != null)
             {
-                continue;
+                var component = entity.GetComponent<T>();
+
+                if (component != null
+                    && (predicate == null || predicate.Invoke(component)))
+                {
+                    yield return (entity, component);
+                }
             }
+        }
+    }
 
-            var component = entity.GetComponent<T>();
+    /// <summary>
+    ///   Возвращает из указанного перечня сущности, у которых есть компоненты указанных типов, которые удовлетворяют
+    ///   указанному предикату (если он указан).
+    /// </summary>
+    ///
+    /// <typeparam name="T1">Тип компонента 1.</typeparam>
+    /// <typeparam name="T2">Тип компонента 2.</typeparam>
+    ///
+    /// <param name="entities">Перечень сущностей.</param>
+    /// <param name="predicate">Предикат.</param>
+    ///
+    /// <returns>
+    ///   Перечень сущностей и компонентов указанных типов.
+    /// </returns>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанный перечень сущностей <paramref name="entities" /> равен <see langword="null" />.
+    /// </exception>
+    public static IEnumerable<(Entity Entity, T1 Component1, T2 Component2)> WithComponent<T1, T2>(
+        this IEnumerable<Entity?> entities,
+        Func<T1, T2, bool>? predicate = null
+        )
+        where T1 : IComponent
+        where T2 : IComponent
+    {
+        #region Проверка аргументов ...
 
-            if (component == null
-                || !predicate.Invoke(component))
+        Throw.IfNull(entities);
+
+        #endregion Проверка аргументов ...
+
+        foreach (var entity in entities)
+        {
+            if (entity != null)
             {
-                continue;
-            }
+                var component1 = entity.GetComponent<T1>();
+                var component2 = entity.GetComponent<T2>();
 
-            yield return entity;
+                if (component1 != null && component2 != null
+                    && (predicate == null || predicate.Invoke(component1, component2)))
+                {
+                    yield return (entity, component1, component2);
+                }
+            }
         }
     }
 }

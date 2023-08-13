@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Graphics;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics;
 using Blowfish.Framework.Graphics.Renderables;
 using System;
 
@@ -45,25 +46,10 @@ public sealed class TileSet : IDisposable
     {
         #region Проверка аргументов ...
 
-        if (renderableFactory == null)
-        {
-            throw new ArgumentNullException(nameof(renderableFactory), "Указанная фабрика объектов для отрисовки равна 'null'.");
-        }
-
-        if (filePath == null)
-        {
-            throw new ArgumentNullException(nameof(filePath), "Указанный путь к файлу равен 'null'.");
-        }
-
-        if (tileWidth < 1)
-        {
-            throw new ArgumentException("Указанная ширина тайла меньше 1.", nameof(tileWidth));
-        }
-
-        if (tileHeight < 1)
-        {
-            throw new ArgumentException("Указанная высота тайла меньше 1.", nameof(tileHeight));
-        }
+        Throw.IfNull(renderableFactory);
+        Throw.IfNull(filePath);
+        Throw.IfLess(tileWidth, 1);
+        Throw.IfLess(tileHeight, 1);
 
         #endregion Проверка аргументов ...
 
@@ -104,10 +90,7 @@ public sealed class TileSet : IDisposable
     {
         #region Проверка аргументов ...
 
-        if (renderer == null)
-        {
-            throw new ArgumentNullException(nameof(renderer), "Указанный рендерер равен 'null'.");
-        }
+        Throw.IfNull(renderer);
 
         #endregion Проверка аргументов ...
 

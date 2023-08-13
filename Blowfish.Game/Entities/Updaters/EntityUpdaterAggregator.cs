@@ -34,15 +34,8 @@ public sealed class EntityUpdaterAggregator : IEntityUpdater
     {
         #region Проверка аргументов ...
 
-        if (updaters == null)
-        {
-            throw new ArgumentNullException(nameof(updaters), "Укзанный массив апдейтеров равен 'null'.");
-        }
-
-        if (updaters.HasNull())
-        {
-            throw new ArgumentException("Указанный массив апдейтеров содержит 'null'.", nameof(updaters));
-        }
+        Throw.IfNull(updaters);
+        Throw.IfContainsNull(updaters);
 
         #endregion Проверка аргументов ...
 
@@ -54,25 +47,10 @@ public sealed class EntityUpdaterAggregator : IEntityUpdater
     {
         #region Проверка аргументов ...
 
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
-        }
-
-        if (controller == null)
-        {
-            throw new ArgumentNullException(nameof(controller), "Указанный контроллер сущностей равен 'null'.");
-        }
-
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный список сущностей равен 'null'.");
-        }
-
-        if (entities.HasNull())
-        {
-            throw new ArgumentException("Указанный список сущностей содержит 'null'.", nameof(entities));
-        }
+        Throw.IfNull(context);
+        Throw.IfNull(controller);
+        Throw.IfNull(entities);
+        Throw.IfContainsNull(entities);
 
         #endregion Проверка аргументов ...
 

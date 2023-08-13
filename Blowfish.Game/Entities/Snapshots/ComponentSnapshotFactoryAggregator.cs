@@ -36,15 +36,8 @@ public sealed class ComponentSnapshotFactoryAggregator : IComponentSnapshotFacto
     {
         #region Проверка аргументов ...
 
-        if (factories == null)
-        {
-            throw new ArgumentNullException(nameof(factories), "Указанный массив фабрик равен 'null'.");
-        }
-
-        if (factories.HasNull())
-        {
-            throw new ArgumentException("Указанный массив фабрик содержит 'null'.", nameof(factories));
-        }
+        Throw.IfNull(factories);
+        Throw.IfContainsNull(factories);
 
         #endregion Проверка аргументов ...
 
@@ -56,10 +49,7 @@ public sealed class ComponentSnapshotFactoryAggregator : IComponentSnapshotFacto
     {
         #region Проверка аргументов ...
 
-        if (component == null)
-        {
-            throw new ArgumentNullException(nameof(component), "Указанный компонент равен 'null'.");
-        }
+        Throw.IfNull(component);
 
         #endregion Проверка аргументов ...
 
@@ -75,10 +65,7 @@ public sealed class ComponentSnapshotFactoryAggregator : IComponentSnapshotFacto
     {
         #region Проверка аргументов ...
 
-        if (component == null)
-        {
-            throw new ArgumentNullException(nameof(component), "Указанный компонент равен 'null'.");
-        }
+        Throw.IfNull(component);
 
         #endregion Проверка аргументов ...
 

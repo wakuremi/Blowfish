@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blowfish.Common;
+using System;
 
 namespace Blowfish.Engine.Entities;
 
@@ -24,10 +25,7 @@ public static class ExtensionsForEntity
     {
         #region Проверка аргументов ...
 
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity), "Указанная сущность равна 'null'.");
-        }
+        Throw.IfNull(entity);
 
         #endregion Проверка аргументов ...
 
@@ -36,44 +34,6 @@ public static class ExtensionsForEntity
         if (!entity.Components.TryGetValue(type, out var component))
         {
             return default;
-        }
-
-        return (T) component;
-    }
-
-    /// <summary>
-    ///   Возвращает компонент указанного типа.
-    /// </summary>
-    ///
-    /// <typeparam name="T">Тип.</typeparam>
-    ///
-    /// <returns>
-    ///   Компонент.
-    /// </returns>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   Указанная сущность <paramref name="entity" /> равна <see langword="null" />.
-    /// </exception>
-    ///
-    /// <exception cref="InvalidOperationException">
-    ///   Отсутствует компонент указанного типа.
-    /// </exception>
-    public static T GetComponentOrThrow<T>(this Entity entity) where T : IComponent
-    {
-        #region Проверка аргументов ...
-
-        if (entity == null)
-        {
-            throw new ArgumentNullException(nameof(entity), "Указанная сущность равна 'null'.");
-        }
-
-        #endregion Проверка аргументов ...
-
-        var type = typeof(T);
-
-        if (!entity.Components.TryGetValue(type, out var component))
-        {
-            throw new InvalidOperationException("Отсутствует компонент указанного типа.");
         }
 
         return (T) component;

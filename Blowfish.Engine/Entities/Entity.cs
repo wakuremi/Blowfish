@@ -40,15 +40,8 @@ public sealed class Entity
     {
         #region Проверка аргументов ...
 
-        if (components == null)
-        {
-            throw new ArgumentNullException(nameof(components), "Указанный массив компонентов равен 'null'.");
-        }
-
-        if (components.HasNull())
-        {
-            throw new ArgumentException("Указанный массив компонентов содержит 'null'.", nameof(components));
-        }
+        Throw.IfNull(components);
+        Throw.IfContainsNull(components);
 
         #endregion Проверка аргументов ...
 

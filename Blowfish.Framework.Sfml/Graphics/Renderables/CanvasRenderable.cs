@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Graphics;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics;
 using Blowfish.Framework.Graphics.Renderables;
 using SFML.Graphics;
 using SFML.System;
@@ -44,15 +45,8 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
     {
         #region Проверка аргументов ...
 
-        if (width < 1)
-        {
-            throw new ArgumentException("Указанная ширина меньше 1.");
-        }
-
-        if (height < 1)
-        {
-            throw new ArgumentException("Указанная высота меньше 1.");
-        }
+        Throw.IfLess(height, 1);
+        Throw.IfLess(width, 1);
 
         #endregion Проверка аргументов ...
 
@@ -121,10 +115,7 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
     {
         #region Проверка аргументов ...
 
-        if (renderable == null)
-        {
-            throw new ArgumentNullException(nameof(renderable), "Указанный объект для отрисовки равен 'null'.");
-        }
+        Throw.IfNull(renderable);
 
         #endregion Проверка аргументов ...
 

@@ -1,12 +1,38 @@
-﻿using System;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics.Renderables;
+using System;
 
 namespace Blowfish.Engine.Graphics;
 
 /// <summary>
 ///   Фабрика наборов тайлов.
 /// </summary>
-public interface ITileSetFactory
+public sealed class TileSetFactory
 {
+    private readonly IRenderableFactory _renderableFactory;
+
+    /// <summary>
+    ///   Создает фабрику наборов тайлов.
+    /// </summary>
+    ///
+    /// <param name="renderableFactory">Фабрика объектов для отрисовки.</param>
+    ///
+    /// <exception cref="ArgumentNullException">
+    ///   Указанная фабрика объектов для отрисовки <paramref name="renderableFactory" /> равна <see langword="null" />.
+    /// </exception>
+    public TileSetFactory(
+        IRenderableFactory renderableFactory
+        )
+    {
+        #region Проверка аргументов ...
+
+        Throw.IfNull(renderableFactory);
+
+        #endregion Проверка аргументов ...
+
+        _renderableFactory = renderableFactory;
+    }
+
     /// <summary>
     ///   Создает набор тайлов.
     /// </summary>
@@ -31,9 +57,14 @@ public interface ITileSetFactory
     /// <exception cref="InvalidOperationException">
     ///   Размер тайла больше размера картинки.
     /// </exception>
-    TileSet Create(
+    public TileSet Create(
         string filePath,
         int tileWidth,
         int tileHeight
-        );
+        )
+    {
+        var tileSet = new TileSet(_renderableFactory, filePath, tileWidth, tileHeight);
+
+        return tileSet;
+    }
 }

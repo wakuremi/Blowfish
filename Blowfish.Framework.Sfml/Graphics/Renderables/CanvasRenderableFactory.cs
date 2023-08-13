@@ -1,4 +1,5 @@
-﻿using Blowfish.Common.Attributes;
+﻿using Blowfish.Common;
+using Blowfish.Common.Attributes;
 using Blowfish.Framework.Graphics.Renderables;
 using System;
 
@@ -25,10 +26,7 @@ public sealed class CanvasRenderableFactory : IRenderableFactory
     {
         #region Проверка аргументов ...
 
-        if (rendererFactory == null)
-        {
-            throw new ArgumentNullException(nameof(rendererFactory), "Указанная фабрика рендереров равна 'null'.");
-        }
+        Throw.IfNull(rendererFactory);
 
         #endregion Проверка аргументов ...
 
@@ -40,15 +38,8 @@ public sealed class CanvasRenderableFactory : IRenderableFactory
     {
         #region Проверка аргументов ...
 
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type), "Указанный тип объекта для отрисовки равен 'null'.");
-        }
-
-        if (args == null)
-        {
-            throw new ArgumentNullException(nameof(args), "Указанные аргументы равны 'null'.");
-        }
+        Throw.IfNull(type);
+        Throw.IfNull(args);
 
         #endregion Проверка аргументов ...
 

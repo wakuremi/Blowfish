@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Graphics;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics;
 using Blowfish.Framework.Input;
 using Blowfish.Framework.Sfml.Graphics;
 using Blowfish.Framework.Sfml.Helpers;
@@ -54,25 +55,11 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     {
         #region Проверка аргументов ...
 
-        if (loggerProvider == null)
-        {
-            throw new ArgumentNullException(nameof(loggerProvider), "Указанный провайдер логгеров равен 'null'.");
-        }
-
-        if (width < 1)
-        {
-            throw new ArgumentException("Указанная ширина окна меньше 1.", nameof(width));
-        }
-
-        if (height < 1)
-        {
-            throw new ArgumentException("Указанная высота окна меньше 1.", nameof(height));
-        }
-
-        if (title == null)
-        {
-            throw new ArgumentNullException(nameof(title), "Указанный заголовок окна равен 'null'.");
-        }
+        Throw.IfNull(rendererFactory);
+        Throw.IfNull(loggerProvider);
+        Throw.IfLess(width, 1);
+        Throw.IfLess(height, 1);
+        Throw.IfNull(title);
 
         #endregion Проверка аргументов ...
 
@@ -232,10 +219,7 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     {
         #region Проверка аргументов ...
 
-        if (game == null)
-        {
-            throw new ArgumentNullException(nameof(game), "Указанная игра равна 'null'.");
-        }
+        Throw.IfNull(game);
 
         #endregion Проверка аргументов ...
 
@@ -295,10 +279,6 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     /// <exception cref="NullReferenceException">
     ///   Указанная игра <paramref name="game" /> равна <see langword="null" />.
     /// </exception>
-    ///
-    /// <exception cref="Exception">
-    ///   Ошибка обновления игры.
-    /// </exception>
     private void UpdateGame(IGame game)
     {
         var context = new UpdateContext(this, this);
@@ -315,10 +295,6 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     ///
     /// <exception cref="NullReferenceException">
     ///   Указанная игра <paramref name="game" /> равна <see langword="null" />.
-    /// </exception>
-    ///
-    /// <exception cref="Exception">
-    ///   Ошибка отрисовки игры.
     /// </exception>
     private void RenderGame(IGame game, float delta)
     {

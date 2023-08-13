@@ -37,19 +37,12 @@ public sealed class EntityRendererAggregator : IEntityRenderer
     {
         #region Проверка аргументов ...
 
-        if (renderers == null)
-        {
-            throw new ArgumentNullException(nameof(renderers), "Указанный массив рендереров равен 'null'.");
-        }
-
-        if (renderers.HasNull())
-        {
-            throw new ArgumentException("Указанный массив рендереров содержит 'null'.", nameof(renderers));
-        }
+        Throw.IfNull(renderers);
+        Throw.IfContainsNull(renderers);
 
         #endregion Проверка аргументов ...
 
-        _renderers = TargetEntityTypeAttributeHelper.CreateDictionary(renderers);
+        _renderers = TargetEntityTypeAttributeHelper.Separate(renderers);
     }
 
     /// <inheritdoc />
@@ -57,15 +50,8 @@ public sealed class EntityRendererAggregator : IEntityRenderer
     {
         #region Проверка аргументов ...
 
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context), "Указанный контекст отрисовки равен 'null'.");
-        }
-
-        if (snapshot == null)
-        {
-            throw new ArgumentNullException(nameof(snapshot), "Указанный снимок сущности равен 'null'.");
-        }
+        Throw.IfNull(context);
+        Throw.IfNull(snapshot);
 
         #endregion Проверка аргументов ...
 

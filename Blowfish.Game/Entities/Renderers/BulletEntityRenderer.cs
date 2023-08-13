@@ -1,4 +1,5 @@
-﻿using Blowfish.Engine.Entities;
+﻿using Blowfish.Common;
+using Blowfish.Engine.Entities;
 using Blowfish.Engine.Graphics;
 using Blowfish.Framework;
 using Blowfish.Game.Entities.Components;
@@ -22,15 +23,12 @@ public sealed class BulletEntityRenderer : IEntityRenderer
     ///   Указанная фабрика наборов тайлов <paramref name="tileSetFactory" /> равна <see langword="null" />.
     /// </exception>
     public BulletEntityRenderer(
-        ITileSetFactory tileSetFactory
+        TileSetFactory tileSetFactory
         )
     {
         #region Проверка аргументов ...
 
-        if (tileSetFactory == null)
-        {
-            throw new ArgumentException(nameof(tileSetFactory), "Указанная фабрика наборов тайлов равна 'null'.");
-        }
+        Throw.IfNull(tileSetFactory);
 
         #endregion Проверка аргументов ...
 
@@ -42,15 +40,8 @@ public sealed class BulletEntityRenderer : IEntityRenderer
     {
         #region Проверка аргументов ...
 
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context), "Указанный контекст отрисовки равен 'null'.");
-        }
-
-        if (snapshot == null)
-        {
-            throw new ArgumentNullException(nameof(snapshot), "Указанный снимок сущности равен 'null'.");
-        }
+        Throw.IfNull(context);
+        Throw.IfNull(snapshot);
 
         #endregion Проверка аргументов ...
 

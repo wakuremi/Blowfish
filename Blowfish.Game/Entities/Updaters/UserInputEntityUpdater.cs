@@ -3,7 +3,6 @@ using Blowfish.Engine.Entities;
 using Blowfish.Framework;
 using Blowfish.Framework.Input;
 using Blowfish.Game.Entities.Components;
-using System;
 using System.Collections.Immutable;
 
 namespace Blowfish.Game.Entities.Updaters;
@@ -23,25 +22,10 @@ public sealed class UserInputEntityUpdater : IEntityUpdater
     {
         #region Проверка аргументов ...
 
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
-        }
-
-        if (controller == null)
-        {
-            throw new ArgumentNullException(nameof(controller), "Указанный контроллер сущностей равен 'null'.");
-        }
-
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный список сущностей равен 'null'.");
-        }
-
-        if (entities.HasNull())
-        {
-            throw new ArgumentException("Указанный список сущностей содержит 'null'.", nameof(entities));
-        }
+        Throw.IfNull(context);
+        Throw.IfNull(controller);
+        Throw.IfNull(entities);
+        Throw.IfContainsNull(entities);
 
         #endregion Проверка аргументов ...
 
@@ -72,12 +56,10 @@ public sealed class UserInputEntityUpdater : IEntityUpdater
 
         var players = entities.With<EntityTypeComponent>(x => x.Type == EntityTypeEnum.Player);
 
-        foreach (var player in players.With<VelocityComponent>())
+        foreach (var (_, velocity) in players.WithComponent<VelocityComponent>())
         {
-            var velocityComponent = player.GetComponentOrThrow<VelocityComponent>();
-
-            velocityComponent.X = x;
-            velocityComponent.Y = y;
+            velocity.X = x;
+            velocity.Y = y;
         }
     }
 }

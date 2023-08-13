@@ -32,10 +32,7 @@ public static class TargetTypeAttributeHelper
     {
         #region Проверка аргументов ...
 
-        if (item == null)
-        {
-            throw new ArgumentNullException(nameof(item), "Указанный объект равен 'null'.");
-        }
+        Throw.IfNull(item);
 
         #endregion Проверка аргументов ...
 
@@ -84,15 +81,8 @@ public static class TargetTypeAttributeHelper
     {
         #region Проверка аргументов ...
 
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items), "Указанный список объектов равен 'null'.");
-        }
-
-        if (items.HasNull())
-        {
-            throw new ArgumentException("Указанный список объектов содержит 'null'.", nameof(items));
-        }
+        Throw.IfNull(items);
+        Throw.IfContainsNull(items);
 
         #endregion Проверка аргументов ...
 

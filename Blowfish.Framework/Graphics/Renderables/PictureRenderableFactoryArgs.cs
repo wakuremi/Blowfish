@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blowfish.Common;
+using System;
 
 namespace Blowfish.Framework.Graphics.Renderables;
 
@@ -28,10 +29,7 @@ public sealed class PictureRenderableFactoryArgs : IRenderableFactoryArgs
     {
         #region Проверка аргументов ...
 
-        if (filePath == null)
-        {
-            throw new ArgumentNullException(nameof(filePath), "Указанный путь к файлу изображения равен 'null'.");
-        }
+        Throw.IfNull(filePath);
 
         #endregion Проверка аргументов ...
 

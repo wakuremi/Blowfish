@@ -33,20 +33,9 @@ public sealed class EntityStageFactory
     {
         #region Проверка аргументов ...
 
-        if (updater == null)
-        {
-            throw new ArgumentNullException(nameof(updater), "Указанный апдейтер сущностей равен 'null'.");
-        }
-
-        if (renderer == null)
-        {
-            throw new ArgumentNullException(nameof(renderer), "Указанныйы рендерер сущностей равен 'null'.");
-        }
-
-        if (containerFactory == null)
-        {
-            throw new ArgumentNullException(nameof(containerFactory), "Указанная фабрика контейнеров сущностей равна 'null'.");
-        }
+        Throw.IfNull(updater);
+        Throw.IfNull(renderer);
+        Throw.IfNull(containerFactory);
 
         #endregion Проверка аргументов ...
 
@@ -74,20 +63,6 @@ public sealed class EntityStageFactory
     /// </exception>
     public EntityStage Create(Entity[] entities)
     {
-        #region Проверка аргументов ...
-
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный массив сущностей равен 'null'.");
-        }
-
-        if (entities.HasNull())
-        {
-            throw new ArgumentException("Указанный массив сущностей содержит 'null'.", nameof(entities));
-        }
-
-        #endregion Проверка аргументов ...
-
         var stage = new EntityStage(
             _updater,
             _renderer,

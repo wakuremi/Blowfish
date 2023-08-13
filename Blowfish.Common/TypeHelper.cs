@@ -36,15 +36,8 @@ public static class TypeHelper
     {
         #region Проверка аргументов ...
 
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items), "Указанный список объектов равен 'null'.");
-        }
-
-        if (items.HasNull())
-        {
-            throw new ArgumentException("Указанный список объектов содержит 'null'.", nameof(items));
-        }
+        Throw.IfNull(items);
+        Throw.IfContainsNull(items);
 
         #endregion Проверка аргументов ...
 

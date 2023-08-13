@@ -36,15 +36,8 @@ public sealed class RenderableFactoryAggregator : IRenderableFactory
     {
         #region Проверка аргументов ...
 
-        if (factories == null)
-        {
-            throw new ArgumentNullException(nameof(factories), "Указанный массив фабрик равен 'null'.");
-        }
-
-        if (factories.HasNull())
-        {
-            throw new ArgumentException("Указанный массив фабрик содержит 'null'.", nameof(factories));
-        }
+        Throw.IfNull(factories);
+        Throw.IfContainsNull(factories);
 
         #endregion Проверка аргументов ...
 
@@ -56,15 +49,8 @@ public sealed class RenderableFactoryAggregator : IRenderableFactory
     {
         #region Проверка аргументов ...
 
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type), "Указанный тип объекта для отрисовки 'null'.");
-        }
-
-        if (args == null)
-        {
-            throw new ArgumentNullException(nameof(args), "Указанные аргументы равны 'null'.");
-        }
+        Throw.IfNull(type);
+        Throw.IfNull(args);
 
         #endregion Проверка аргументов ...
 

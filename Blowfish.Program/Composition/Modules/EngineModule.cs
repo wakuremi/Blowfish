@@ -1,6 +1,5 @@
 ﻿using Blowfish.Engine.Entities;
 using Blowfish.Engine.Graphics;
-using Ninject.Extensions.Factory;
 using Ninject.Modules;
 
 namespace Blowfish.Program.Composition.Modules;
@@ -25,8 +24,8 @@ public sealed class EngineModule : NinjectModule
             .ToSelf()
             .InTransientScope();
 
-        _ = Bind<ITileSetFactory>()
-            .ToFactory()
+        _ = Bind<TileSetFactory>()
+            .ToSelf()
             .InSingletonScope();
     }
 }

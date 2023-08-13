@@ -33,10 +33,7 @@ public static class TargetEntityTypeAttributeHelper
     {
         #region Проверка аргументов ...
 
-        if (item == null)
-        {
-            throw new ArgumentNullException(nameof(item), "Указанный объект равен 'null'.");
-        }
+        Throw.IfNull(item);
 
         #endregion Проверка аргументов ...
 
@@ -81,19 +78,12 @@ public static class TargetEntityTypeAttributeHelper
     ///   2. Целевой тип сущности не указан.
     ///   3. Целевой тип сущности фигурирует более одного раза.
     /// </exception>
-    public static ImmutableDictionary<EntityTypeEnum, T> CreateDictionary<T>(IReadOnlyList<T> items) where T : notnull
+    public static ImmutableDictionary<EntityTypeEnum, T> Separate<T>(IReadOnlyList<T> items) where T : notnull
     {
         #region Проверка аргументов ...
 
-        if (items == null)
-        {
-            throw new ArgumentNullException(nameof(items), "Указанный список объектов равен 'null'.");
-        }
-
-        if (items.HasNull())
-        {
-            throw new ArgumentException("Указанный список объектов содержит 'null'.", nameof(items));
-        }
+        Throw.IfNull(items);
+        Throw.IfContainsNull(items);
 
         #endregion Проверка аргументов ...
 

@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Graphics;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics;
 using System;
 
 namespace Blowfish.Framework;
@@ -41,10 +42,7 @@ public sealed class RenderContext
     {
         #region Проверка аргументов ...
 
-        if (renderer == null)
-        {
-            throw new ArgumentNullException(nameof(renderer), "Указанный рендерер равен 'null'.");
-        }
+        Throw.IfNull(renderer);
 
         #endregion Проверка аргументов ...
 

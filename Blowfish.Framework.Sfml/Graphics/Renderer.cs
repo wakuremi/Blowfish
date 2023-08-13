@@ -1,4 +1,5 @@
-﻿using Blowfish.Framework.Graphics;
+﻿using Blowfish.Common;
+using Blowfish.Framework.Graphics;
 using Blowfish.Framework.Graphics.Renderables;
 using SFML.Graphics;
 using System;
@@ -23,10 +24,7 @@ public sealed class Renderer : IRenderer
     {
         #region Проверка аргументов ...
 
-        if (target == null)
-        {
-            throw new ArgumentNullException(nameof(target), "Указанное место отрисовки равно 'null'.");
-        }
+        Throw.IfNull(target);
 
         #endregion Проверка аргументов ...
 
@@ -38,10 +36,7 @@ public sealed class Renderer : IRenderer
     {
         #region Проверка аргументов ...
 
-        if (renderable == null)
-        {
-            throw new ArgumentNullException(nameof(renderable), "Указанный объект для отрисовки равен 'null'.");
-        }
+        Throw.IfNull(renderable);
 
         #endregion Проверка аргументов ...
 
@@ -58,6 +53,10 @@ public sealed class Renderer : IRenderer
             {
                 throw new InvalidOperationException("Ошибка отрисовки.", exception);
             }
+        }
+        else
+        {
+            throw new InvalidOperationException($"Ошибка отрисовки: указанный объект не реализует {nameof(Drawable)}.");
         }
     }
 }

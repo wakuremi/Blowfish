@@ -1,4 +1,5 @@
-﻿using Blowfish.Engine.Entities;
+﻿using Blowfish.Common;
+using Blowfish.Engine.Entities;
 using Blowfish.Game.Entities.Snapshots;
 using System;
 
@@ -35,10 +36,7 @@ public sealed class EntityRendererHelper
     {
         #region Проверка аргументов ...
 
-        if (entitySnapshot == null)
-        {
-            throw new ArgumentNullException(nameof(entitySnapshot), "Указанный снимок сущности равен 'null'.");
-        }
+        Throw.IfNull(entitySnapshot);
 
         #endregion Проверка аргументов ...
 
@@ -87,10 +85,7 @@ public sealed class EntityRendererHelper
     {
         #region Проверка аргументов ...
 
-        if (entitySnapshot == null)
-        {
-            throw new ArgumentNullException(nameof(entitySnapshot), "Указанный снимок сущности равен 'null'.");
-        }
+        Throw.IfNull(entitySnapshot);
 
         #endregion Проверка аргументов ...
 

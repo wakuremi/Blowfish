@@ -2,7 +2,6 @@
 using Blowfish.Engine.Entities;
 using Blowfish.Framework;
 using Blowfish.Game.Entities.Components;
-using System;
 using System.Collections.Immutable;
 
 namespace Blowfish.Game.Entities.Updaters;
@@ -22,35 +21,17 @@ public sealed class PreviousLocationEntityUpdater : IEntityUpdater
     {
         #region Проверка аргументов ...
 
-        if (context == null)
-        {
-            throw new ArgumentNullException(nameof(context), "Указанный контекст обновления равен 'null'.");
-        }
-
-        if (controller == null)
-        {
-            throw new ArgumentNullException(nameof(controller), "Указанный контроллер сущностей равен 'null'.");
-        }
-
-        if (entities == null)
-        {
-            throw new ArgumentNullException(nameof(entities), "Указанный список сущностей равен 'null'.");
-        }
-
-        if (entities.HasNull())
-        {
-            throw new ArgumentException("Указанный список сущностей содержит 'null'.", nameof(entities));
-        }
+        Throw.IfNull(context);
+        Throw.IfNull(controller);
+        Throw.IfNull(entities);
+        Throw.IfContainsNull(entities);
 
         #endregion Проверка аргументов ...
 
-        foreach (var entity in entities.With<LocationComponent, PreviousLocationComponent>())
+        foreach (var (_, previousLocation, location) in entities.WithComponent<PreviousLocationComponent, LocationComponent>())
         {
-            var locationComponent = entity.GetComponentOrThrow<LocationComponent>();
-            var previousLocationComponent = entity.GetComponentOrThrow<PreviousLocationComponent>();
-
-            previousLocationComponent.X = locationComponent.X;
-            previousLocationComponent.Y = locationComponent.Y;
+            previousLocation.X = location.X;
+            previousLocation.Y = location.Y;
         }
     }
 }

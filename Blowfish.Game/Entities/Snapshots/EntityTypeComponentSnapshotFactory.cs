@@ -1,4 +1,5 @@
-﻿using Blowfish.Common.Attributes;
+﻿using Blowfish.Common;
+using Blowfish.Common.Attributes;
 using Blowfish.Engine.Entities;
 using Blowfish.Game.Entities.Components;
 using System;
@@ -21,10 +22,7 @@ public sealed class EntityTypeComponentSnapshotFactory : IComponentSnapshotFacto
     {
         #region Проверка аргументов ...
 
-        if (component == null)
-        {
-            throw new ArgumentNullException(nameof(component), "Указанный компонент равен 'null'.");
-        }
+        Throw.IfNull(component);
 
         #endregion Проверка аргументов ...
 
@@ -38,10 +36,7 @@ public sealed class EntityTypeComponentSnapshotFactory : IComponentSnapshotFacto
     {
         #region Проверка аргументов ...
 
-        if (component == null)
-        {
-            throw new ArgumentNullException(nameof(component), "Указанный компонент равен 'null'.");
-        }
+        Throw.IfNull(component);
 
         #endregion Проверка аргументов ...
 
