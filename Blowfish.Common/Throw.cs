@@ -46,7 +46,7 @@ public static class Throw
     /// <exception cref="ArgumentException">
     ///   Указанный список <paramref name="list" /> содержит <see langword="null" />.
     /// </exception>
-    public static void IfContainsNull<T>(
+    public static void IfHasNull<T>(
         IReadOnlyList<T> list,
         [CallerArgumentExpression(nameof(list))] string? name = null
         )
@@ -206,6 +206,35 @@ public static class Throw
     }
 
     /// <summary>
+    ///   Бросает исключение, если одно значение равно другому.
+    /// </summary>
+    ///
+    /// <typeparam name="T">Тип значений.</typeparam>
+    ///
+    /// <param name="value">Значение.</param>
+    /// <param name="other">Другое значение.</param>
+    /// <param name="name">Имя.</param>
+    ///
+    /// <exception cref="NullReferenceException">
+    ///   Указанное значение <paramref name="value" /> равно <see langword="null" />.
+    /// </exception>
+    ///
+    /// <exception cref="ArgumentException">
+    ///   Указанное значение <paramref name="value" /> равно другому <paramref name="other" />.
+    /// </exception>
+    public static void IfEqual<T>(
+        T value,
+        T? other,
+        [CallerArgumentExpression(nameof(value))] string? name = null
+        )
+    {
+        if (value!.Equals(other) == true)
+        {
+            throw new ArgumentException($"Указанное значение {value} равно {other}.", name);
+        }
+    }
+
+    /// <summary>
     ///   Бросает исключение, если одно значение не равно другому.
     /// </summary>
     ///
@@ -235,6 +264,67 @@ public static class Throw
     }
 
     /// <summary>
+    ///   Бросает исключение, если одно значение не равно другому.
+    /// </summary>
+    ///
+    /// <typeparam name="T">Тип значений.</typeparam>
+    ///
+    /// <param name="value">Значение.</param>
+    /// <param name="other">Другое значение.</param>
+    /// <param name="name">Имя.</param>
+    ///
+    /// <exception cref="NullReferenceException">
+    ///   Указанное значение <paramref name="value" /> равно <see langword="null" />.
+    /// </exception>
+    ///
+    /// <exception cref="ArgumentException">
+    ///   Указанное значение <paramref name="value" /> не равно другому <paramref name="other" />.
+    /// </exception>
+    public static void IfNotEqual<T>(
+        T value,
+        T? other,
+        [CallerArgumentExpression(nameof(value))] string? name = null
+        )
+    {
+        if (value!.Equals(other) == false)
+        {
+            throw new ArgumentException($"Указанное значение {value} не равно {other}.", name);
+        }
+    }
+
+    /// <summary>
+    ///   Бросает исключение, если указанное значение находится внутри указанного диапазона.
+    /// </summary>
+    ///
+    /// <typeparam name="T">Тип значений.</typeparam>
+    ///
+    /// <param name="value">Значение.</param>
+    /// <param name="a">Начало диапазона.</param>
+    /// <param name="b">Конец диапазона (не включается).</param>
+    /// <param name="name">Имя.</param>
+    ///
+    /// <exception cref="NullReferenceException">
+    ///   Указанное значение <paramref name="value" /> равно <see langword="null" />.
+    /// </exception>
+    ///
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///   Указанное значение <paramref name="value" /> больше или равно <paramref name="a" /> или меньше <paramref name="b" />.
+    /// </exception>
+    public static void InInRange<T>(
+        IComparable<T> value,
+        T? a,
+        T? b,
+        [CallerArgumentExpression(nameof(value))] string? name = null
+        )
+    {
+        if (value.CompareTo(a) >= 0
+            || value.CompareTo(b) < 0)
+        {
+            throw new ArgumentOutOfRangeException(name, $"Указанное значение {value} больше или равно {a} или меньше {b}.");
+        }
+    }
+
+    /// <summary>
     ///   Бросает исключение, если указанное значение находится вне указанного диапазона.
     /// </summary>
     ///
@@ -252,7 +342,7 @@ public static class Throw
     /// <exception cref="ArgumentOutOfRangeException">
     ///   Указанное значение <paramref name="value" /> меньше <paramref name="a" /> или больше или равно <paramref name="b" />.
     /// </exception>
-    public static void IfNotWithin<T>(
+    public static void IfOutOfRange<T>(
         IComparable<T> value,
         T? a,
         T? b,

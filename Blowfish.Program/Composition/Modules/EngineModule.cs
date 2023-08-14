@@ -1,4 +1,5 @@
-﻿using Blowfish.Engine.Entities;
+﻿using Blowfish.Engine;
+using Blowfish.Engine.Entities;
 using Blowfish.Engine.Graphics;
 using Ninject.Modules;
 
@@ -12,19 +13,19 @@ public sealed class EngineModule : NinjectModule
 
     public override void Load()
     {
-        _ = Bind<EntityStageFactory>()
+        _ = Bind<Application>()
             .ToSelf()
             .InSingletonScope();
 
-        _ = Bind<EntitySnapshotFactory>()
+        _ = Bind<GameFactory>()
             .ToSelf()
             .InSingletonScope();
 
-        _ = Bind<TileSet>()
+        _ = Bind<SpriteSheetFactory>()
             .ToSelf()
-            .InTransientScope();
+            .InSingletonScope();
 
-        _ = Bind<TileSetFactory>()
+        _ = Bind<Stage>()
             .ToSelf()
             .InSingletonScope();
     }

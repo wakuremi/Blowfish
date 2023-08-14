@@ -215,11 +215,11 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     #endregion Обработка событий ...
 
     /// <inheritdoc />
-    public void Run(IGame game)
+    public void Run(IRunnable runnable)
     {
         #region Проверка аргументов ...
 
-        Throw.IfNull(game);
+        Throw.IfNull(runnable);
 
         #endregion Проверка аргументов ...
 
@@ -244,7 +244,7 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
 
             while (lag >= Micros)
             {
-                UpdateGame(game);
+                Update(runnable);
                 updates++;
 
                 lag -= Micros;
@@ -252,7 +252,7 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
 
             var delta = lag / Micros;
 
-            RenderGame(game, delta);
+            Render(runnable, delta);
             renders++;
 
             var time = timer.ElapsedTime;
@@ -271,38 +271,38 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     }
 
     /// <summary>
-    ///   Выполняет обновление игры.
+    ///   Выполняет обновление указанного объекта.
     /// </summary>
     ///
-    /// <param name="game">Игра.</param>
+    /// <param name="runnable">Объект для выполнения.</param>
     ///
     /// <exception cref="NullReferenceException">
-    ///   Указанная игра <paramref name="game" /> равна <see langword="null" />.
+    ///   Указанный объект для выполнения <paramref name="runnable" /> равен <see langword="null" />.
     /// </exception>
-    private void UpdateGame(IGame game)
+    private void Update(IRunnable runnable)
     {
         var context = new UpdateContext(this, this);
 
-        game.Update(context);
+        runnable.Update(context);
     }
 
     /// <summary>
-    ///   Выполняет отрисовку игры.
+    ///   Выполняет отрисовку указанного объекта.
     /// </summary>
     ///
-    /// <param name="game">Игра.</param>
+    /// <param name="runnable">Объект для выполнения.</param>
     /// <param name="delta">Дельта времени.</param>
     ///
     /// <exception cref="NullReferenceException">
-    ///   Указанная игра <paramref name="game" /> равна <see langword="null" />.
+    ///   Указанный объект для выполнения <paramref name="runnable" /> равен <see langword="null" />.
     /// </exception>
-    private void RenderGame(IGame game, float delta)
+    private void Render(IRunnable runnable, float delta)
     {
         var context = new RenderContext(_renderer, delta);
 
         _window.Clear(Color.White);
 
-        game.Render(context);
+        runnable.Render(context);
 
         _window.Display();
     }

@@ -37,7 +37,7 @@ public static class TypeHelper
         #region Проверка аргументов ...
 
         Throw.IfNull(items);
-        Throw.IfContainsNull(items);
+        Throw.IfHasNull(items);
 
         #endregion Проверка аргументов ...
 

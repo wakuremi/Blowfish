@@ -6,7 +6,7 @@ using System;
 namespace Blowfish.Framework.Sfml.Graphics.Renderables;
 
 /// <inheritdoc cref="IRenderableFactory" />
-[TargetType(typeof(ICanvasRenderable))]
+[Target<Type>(typeof(ICanvasRenderable))]
 public sealed class CanvasRenderableFactory : IRenderableFactory
 {
     private readonly IRendererFactory _rendererFactory;

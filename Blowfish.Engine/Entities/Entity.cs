@@ -1,6 +1,7 @@
 ﻿using Blowfish.Common;
-using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System;
 
 namespace Blowfish.Engine.Entities;
 
@@ -10,9 +11,9 @@ namespace Blowfish.Engine.Entities;
 public sealed class Entity
 {
     /// <summary>
-    ///   Возвращает словарь компонентов.
+    ///   Возвращает словарь модулей.
     /// </summary>
-    public ImmutableDictionary<Type, IComponent> Components
+    public ImmutableDictionary<Type, IModule> Modules
     {
         get;
     }
@@ -21,30 +22,30 @@ public sealed class Entity
     ///   Создает сущность.
     /// </summary>
     ///
-    /// <param name="components">Массив компонентов.</param>
+    /// <param name="modules">Список модулей.</param>
     ///
     /// <exception cref="ArgumentNullException">
-    ///   Указанный массив компонентов <paramref name="components" /> равен <see langword="null" />.
+    ///   Указанный список модулей <paramref name="modules" /> равен <see langword="null" />.
     /// </exception>
     ///
     /// <exception cref="ArgumentException">
-    ///   Указанный массив компонентов <paramref name="components" /> содержит <see langword="null" />.
+    ///   Указанный список модулей <paramref name="modules" /> содержит <see langword="null" />.
     /// </exception>
     ///
     /// <exception cref="InvalidOperationException">
-    ///   Указано несколько компонентов одного типа.
+    ///   Указано несколько модулей одного и того же типа.
     /// </exception>
     public Entity(
-        IComponent[] components
+        IReadOnlyList<IModule> modules
         )
     {
         #region Проверка аргументов ...
 
-        Throw.IfNull(components);
-        Throw.IfContainsNull(components);
+        Throw.IfNull(modules);
+        Throw.IfHasNull(modules);
 
         #endregion Проверка аргументов ...
 
-        Components = TypeHelper.Separate(components);
+        Modules = TypeHelper.Separate(modules);
     }
 }

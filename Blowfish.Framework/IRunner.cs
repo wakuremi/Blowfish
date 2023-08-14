@@ -8,13 +8,13 @@ namespace Blowfish.Framework;
 public interface IRunner : IDisposable
 {
     /// <summary>
-    ///   Выполняет указанную игру до тех пор, пока не будет остановлен.
+    ///   Запускает выполнение указанного объекта и ожидает его окончания.
     /// </summary>
     ///
-    /// <param name="game">Игра.</param>
+    /// <param name="runnable">Объект для выполнения.</param>
     ///
     /// <exception cref="ArgumentNullException">
-    ///   Указанная игра <paramref name="game" /> равна <see langword="null" />.
+    ///   Указанный объект для выполнения <paramref name="runnable" /> равен <see langword="null" />.
     /// </exception>
-    void Run(IGame game);
+    void Run(IRunnable runnable);
 }

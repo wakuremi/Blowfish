@@ -1,12 +1,10 @@
 ﻿using Blowfish.Engine.Entities;
-using Blowfish.Framework;
+using Blowfish.Engine.Graphics;
 using Blowfish.Game;
-using Blowfish.Game.Entities.Components;
-using Blowfish.Game.Entities.Renderers;
-using Blowfish.Game.Entities.Snapshots;
-using Blowfish.Game.Entities.Updaters;
+using Blowfish.Game.Creatures;
+using Blowfish.Game.Creatures.Renderers;
+using Blowfish.Game.Creatures.Updaters;
 using Ninject;
-using Ninject.Extensions.Factory;
 using Ninject.Modules;
 
 namespace Blowfish.Program.Composition.Modules;
@@ -19,60 +17,25 @@ public sealed class GameModule : NinjectModule
 
     public override void Load()
     {
-        _ = Bind<IGame>()
-            .To<BlowfishGame>()
-            .InTransientScope();
-
-        _ = Bind<IGameFactory>()
-            .ToFactory()
-            .InSingletonScope();
-
-        _ = Bind<IComponentSnapshotFactory>()
-            .To<ComponentSnapshotFactoryAggregator>()
-            .When(r =>
-            {
-                // Чтобы агрегатор не инжектился сам в себя.
-                return r.Target == null
-                    || r.Target.Member.ReflectedType != typeof(ComponentSnapshotFactoryAggregator);
-            })
-            .InSingletonScope();
-
-        _ = Bind<IComponentSnapshotFactory>()
-            .To<LocationComponentSnapshotFactory>()
-            .WhenInjectedExactlyInto<ComponentSnapshotFactoryAggregator>()
-            .InSingletonScope();
-
-        _ = Bind<IComponentSnapshotFactory>()
-            .To<PreviousLocationComponentSnapshotFactory>()
-            .WhenInjectedExactlyInto<ComponentSnapshotFactoryAggregator>()
-            .InSingletonScope();
-
-        _ = Bind<IComponentSnapshotFactory>()
-            .To<EntityTypeComponentSnapshotFactory>()
-            .WhenInjectedExactlyInto<ComponentSnapshotFactoryAggregator>()
-            .InSingletonScope();
-
         _ = Bind<IEntityUpdater>()
             .To<EntityUpdaterAggregator>()
             .InSingletonScope()
             .WithConstructorArgument(
-                "updaters", // Порядок важен, поэтому определяем его явно.
+                "updaters",
                 ctx => new IEntityUpdater[]
                 {
-                    ctx.Kernel.Get<PreviousLocationEntityUpdater>(),
-                    ctx.Kernel.Get<FireEntityUpdater>(),
+                    ctx.Kernel.Get<InitializerEntityUpdater>(),
+                    ctx.Kernel.Get<TrackEntityUpdater>(),
                     ctx.Kernel.Get<UserInputEntityUpdater>(),
-                    ctx.Kernel.Get<AccelerationEntityUpdater>(),
-                    ctx.Kernel.Get<DecelerationEntityUpdater>(),
                     ctx.Kernel.Get<MovementEntityUpdater>()
                 }
                 );
 
-        _ = Bind<PreviousLocationComponent>()
+        _ = Bind<InitializerEntityUpdater>()
             .ToSelf()
             .InSingletonScope();
 
-        _ = Bind<FireEntityUpdater>()
+        _ = Bind<TrackEntityUpdater>()
             .ToSelf()
             .InSingletonScope();
 
@@ -80,36 +43,54 @@ public sealed class GameModule : NinjectModule
             .ToSelf()
             .InSingletonScope();
 
-        _ = Bind<AccelerationEntityUpdater>()
-            .ToSelf()
-            .InSingletonScope();
-
-        _ = Bind<DecelerationEntityUpdater>()
-            .ToSelf()
-            .InSingletonScope();
-
         _ = Bind<MovementEntityUpdater>()
             .ToSelf()
             .InSingletonScope();
 
-        _ = Bind<IEntityRenderer>()
-            .To<EntityRendererAggregator>()
+        _ = Bind<ISnapshotFactory>()
+            .To<SnapshotFactoryAggregator>()
             .When(r =>
             {
                 // Чтобы агрегатор не инжектился сам в себя.
                 return r.Target == null
-                    || r.Target.Member.ReflectedType != typeof(EntityRendererAggregator);
+                    || r.Target.Member.ReflectedType != typeof(SnapshotFactoryAggregator);
             })
             .InSingletonScope();
 
-        _ = Bind<IEntityRenderer>()
-            .To<PlayerEntityRenderer>()
-            .WhenInjectedExactlyInto<EntityRendererAggregator>()
+        _ = Bind<ISnapshotFactory>()
+            .To<CreatureSnapshotFactory>()
+            .WhenInjectedExactlyInto<SnapshotFactoryAggregator>()
             .InSingletonScope();
 
-        _ = Bind<IEntityRenderer>()
-            .To<BulletEntityRenderer>()
-            .WhenInjectedExactlyInto<EntityRendererAggregator>()
+        _ = Bind<ISnapshotRenderer>()
+            .To<SnapshotRendererAggregator>()
+            .When(r =>
+            {
+                // Чтобы агрегатор не инжектился сам в себя.
+                return r.Target == null
+                    || r.Target.Member.ReflectedType != typeof(SnapshotRendererAggregator);
+            })
             .InSingletonScope();
+
+        _ = Bind<ISnapshotRenderer>()
+            .To<CreatureSnapshotRenderer>()
+            .WhenInjectedExactlyInto<SnapshotRendererAggregator>()
+            .InSingletonScope();
+
+        _ = Bind<ICreatureRenderer>()
+            .To<PlayerCreatureRenderer>()
+            .InSingletonScope();
+
+        _ = Bind<ICreatureRenderer>()
+            .To<CrateCreatureRenderer>()
+            .InSingletonScope();
+
+        // TODO: temp
+        _ = Bind<SpriteSheet>()
+            .ToSelf()
+            .InSingletonScope()
+            .WithConstructorArgument("filePath", "Assets/Sprites.png")
+            .WithConstructorArgument("spriteWidth", 16)
+            .WithConstructorArgument("spriteHeight", 16);
     }
 }

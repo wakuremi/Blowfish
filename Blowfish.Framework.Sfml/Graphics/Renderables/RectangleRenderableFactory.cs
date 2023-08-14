@@ -6,7 +6,7 @@ using System;
 namespace Blowfish.Framework.Sfml.Graphics.Renderables;
 
 /// <inheritdoc cref="IRenderableFactory" />
-[TargetType(typeof(IRectangleRenderable))]
+[Target<Type>(typeof(IRectangleRenderable))]
 public sealed class RectangleRenderableFactory : IRenderableFactory
 {
     /// <summary>

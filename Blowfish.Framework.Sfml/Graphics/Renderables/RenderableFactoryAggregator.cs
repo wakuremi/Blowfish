@@ -37,11 +37,11 @@ public sealed class RenderableFactoryAggregator : IRenderableFactory
         #region Проверка аргументов ...
 
         Throw.IfNull(factories);
-        Throw.IfContainsNull(factories);
+        Throw.IfHasNull(factories);
 
         #endregion Проверка аргументов ...
 
-        _factories = TargetTypeAttributeHelper.Separate(factories);
+        _factories = TargetAttributeHelper.Separate<Type, IRenderableFactory>(factories);
     }
 
     /// <inheritdoc />

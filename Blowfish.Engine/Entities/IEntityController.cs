@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 
 namespace Blowfish.Engine.Entities;
 
@@ -7,6 +8,14 @@ namespace Blowfish.Engine.Entities;
 /// </summary>
 public interface IEntityController
 {
+    /// <summary>
+    ///   Возвращает список сущностей.
+    /// </summary>
+    ImmutableList<Entity> Entities
+    {
+        get;
+    }
+
     /// <summary>
     ///   Вставляет указанную сущность.
     /// </summary>

@@ -17,10 +17,6 @@ public sealed class FrameworkModule : NinjectModule
 
     public override void Load()
     {
-        _ = Bind<Application>()
-            .ToSelf()
-            .InSingletonScope();
-
         _ = Bind<IRunner>()
             .To<Runner>()
             .InTransientScope()
