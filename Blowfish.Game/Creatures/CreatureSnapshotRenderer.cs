@@ -46,7 +46,6 @@ public sealed class CreatureSnapshotRenderer : ISnapshotRenderer
     {
         #region Проверка аргументов ...
 
-        Throw.IfNull(context);
         Throw.IfNull(snapshot);
 
         #endregion Проверка аргументов ...

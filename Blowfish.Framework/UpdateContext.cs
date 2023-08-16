@@ -7,23 +7,19 @@ namespace Blowfish.Framework;
 /// <summary>
 ///   Контекст обновления.
 /// </summary>
-public sealed class UpdateContext
+public readonly struct UpdateContext
 {
-    /// <summary>
-    ///   Возвращает клавиатуру.
-    /// </summary>
-    public IKeyboard Keyboard
-    {
-        get;
-    }
+    // Это структура! Убедитесь, что параметрический конструктор будет вызван!
 
     /// <summary>
-    ///   Возвращает мышь.
+    ///   Клавиатура.
     /// </summary>
-    public IMouse Mouse
-    {
-        get;
-    }
+    public readonly IKeyboard Keyboard;
+
+    /// <summary>
+    ///   Мышь.
+    /// </summary>
+    public readonly IMouse Mouse;
 
     /// <summary>
     ///   Создает контекст обновления.

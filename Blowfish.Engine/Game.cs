@@ -48,12 +48,6 @@ public sealed class Game : IRunnable
     /// <inheritdoc />
     public void Update(UpdateContext context)
     {
-        #region Проверка аргументов ...
-
-        Throw.IfNull(context);
-
-        #endregion Проверка аргументов ...
-
         var snapshots = _stage.Update(context);
 
         _ = ImmutableInterlocked.InterlockedExchange(ref _snapshots, snapshots);
@@ -62,12 +56,6 @@ public sealed class Game : IRunnable
     /// <inheritdoc />
     public void Render(RenderContext context)
     {
-        #region Проверка аргументов ...
-
-        Throw.IfNull(context);
-
-        #endregion Проверка аргументов ...
-
         foreach (var snapshot in _snapshots)
         {
             _renderer.Render(context, snapshot);

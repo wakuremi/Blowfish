@@ -53,18 +53,8 @@ public sealed class Stage
     /// <returns>
     ///   Массив снимков.
     /// </returns>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   Указанный контекст обновления <paramref name="context" /> равен <see langword="null" />.
-    /// </exception>
     public ImmutableArray<ISnapshot> Update(UpdateContext context)
     {
-        #region Проверка аргументов ...
-
-        Throw.IfNull(context);
-
-        #endregion Проверка аргументов ...
-
         _updater.Update(context, _controller);
 
         _controller.Commit();

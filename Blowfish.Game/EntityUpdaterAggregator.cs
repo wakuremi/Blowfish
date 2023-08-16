@@ -45,7 +45,6 @@ public sealed class EntityUpdaterAggregator : IEntityUpdater
     {
         #region Проверка аргументов ...
 
-        Throw.IfNull(context);
         Throw.IfNull(controller);
 
         #endregion Проверка аргументов ...

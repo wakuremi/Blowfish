@@ -7,23 +7,19 @@ namespace Blowfish.Framework;
 /// <summary>
 ///   Контекст отрисовки.
 /// </summary>
-public sealed class RenderContext
+public readonly struct RenderContext
 {
-    /// <summary>
-    ///   Возвращает рендерер.
-    /// </summary>
-    public IRenderer Renderer
-    {
-        get;
-    }
+    // Это структура! Убедитесь, что параметрический конструктор будет вызван!
 
     /// <summary>
-    ///   Возвращает дельту времени.
+    ///   Рендерер.
     /// </summary>
-    public float Delta
-    {
-        get;
-    }
+    public readonly IRenderer Renderer;
+
+    /// <summary>
+    ///   Дельта времени.
+    /// </summary>
+    public readonly float Delta;
 
     /// <summary>
     ///   Создает контекст отрисовки.

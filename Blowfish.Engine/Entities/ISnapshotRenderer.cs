@@ -16,8 +16,7 @@ public interface ISnapshotRenderer
     /// <param name="snapshot">Снимок.</param>
     ///
     /// <exception cref="ArgumentNullException">
-    ///   1. Указанный контекст отрисовки <paramref name="context" /> равен <see langword="null" />.
-    ///   2. Указанный снимок <paramref name="snapshot" /> равен <see langword="null" />.
+    ///   Указанный снимок <paramref name="snapshot" /> равен <see langword="null" />.
     /// </exception>
     void Render(RenderContext context, ISnapshot snapshot);
 }

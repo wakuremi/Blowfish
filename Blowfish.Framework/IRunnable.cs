@@ -12,10 +12,6 @@ public interface IRunnable
     /// </summary>
     ///
     /// <param name="context">Контекст обновления.</param>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   Указанный контекст обновления <paramref name="context" /> равен <see langword="null" />.
-    /// </exception>
     void Update(UpdateContext context);
 
     /// <summary>
@@ -23,9 +19,5 @@ public interface IRunnable
     /// </summary>
     ///
     /// <param name="context">Контекст отрисовки.</param>
-    ///
-    /// <exception cref="ArgumentNullException">
-    ///   Указанный контекст отрисовки <paramref name="context" /> равен <see langword="null" />.
-    /// </exception>
     void Render(RenderContext context);
 }
