@@ -53,7 +53,7 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
         _texture = new RenderTexture((uint) width, (uint) height);
         _sprite = new Sprite(_texture.Texture);
 
-        _renderer = rendererFactory.Create(_texture);
+        _renderer = rendererFactory.Create(_texture, _texture.DefaultView);
     }
 
     /// <inheritdoc />
@@ -120,6 +120,12 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
         #endregion Проверка аргументов ...
 
         _renderer.Render(renderable);
+    }
+
+    /// <inheritdoc />
+    public void Translate(float x, float y)
+    {
+        _renderer.Translate(x, y);
     }
 
     /// <inheritdoc />

@@ -23,6 +23,9 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
     private float _pointerY;
 
     private readonly RenderWindow _window;
+    private readonly View _view;
+    private readonly FloatRect _rect;
+
     private readonly IRenderer _renderer;
 
     /// <summary>
@@ -79,7 +82,12 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
         _window.MouseButtonReleased += HandleMouseButtonReleased;
         _window.MouseMoved += HandlePointerMoved;
 
-        _renderer = rendererFactory.Create(_window);
+        // Примечание: "DefaultView" всегда создает новый объект.
+        // Делаем это однократно здесь, а также запоминаем размеры представления "по умолчанию" для последующего сброса.
+        _view = _window.DefaultView;
+        _rect = new FloatRect(_view.Center - _view.Size / 2.0F, _view.Size);
+
+        _renderer = rendererFactory.Create(_window, _view);
 
         _logger.Info("Окно инициализировано.");
     }
@@ -301,6 +309,11 @@ public sealed class Runner : IRunner, IKeyboard, IMouse, IDisposable
         var context = new RenderContext(_renderer, delta);
 
         _window.Clear(Color.White);
+
+        // Выполняем сброс представления.
+        _view.Reset(_rect);
+
+        _window.SetView(_view);
 
         runnable.Render(context);
 

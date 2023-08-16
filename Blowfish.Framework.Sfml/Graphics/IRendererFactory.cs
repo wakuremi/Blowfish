@@ -14,9 +14,11 @@ public interface IRendererFactory
     /// </summary>
     ///
     /// <param name="target">Место отрисовки.</param>
+    /// <param name="target">Представление.</param>
     ///
     /// <exception cref="ArgumentNullException">
-    ///   Указанное место отрисовки <paramref name="target" /> равно <see langword="null" />.
+    ///   1. Указанное место отрисовки <paramref name="target" /> равно <see langword="null" />.
+    ///   2. Указанное представление <paramref name="view" /> равно <see langword="null" />.
     /// </exception>
-    IRenderer Create(RenderTarget target);
+    IRenderer Create(RenderTarget target, View view);
 }
