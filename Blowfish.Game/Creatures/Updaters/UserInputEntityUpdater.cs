@@ -53,12 +53,21 @@ public sealed class UserInputEntityUpdater : IEntityUpdater
             y += Velocity;
         }
 
-        var updatables = controller.Entities
-            .With<CreatureTypeModule>(x => x.Type == CreatureTypeEnum.Player)
-            .WithModules<VelocityModule>();
+        var entities = controller.Entities;
 
-        foreach (var (_, velocity) in updatables)
+        for (var i = 0; i < entities.Count; i++)
         {
+            var entity = entities[i];
+
+            var creatureType = entity.GetModuleIfHas<CreatureTypeModule>();
+            var velocity = entity.GetModuleIfHas<VelocityModule>();
+
+            if (creatureType == null || creatureType.Type != CreatureTypeEnum.Player
+                || velocity == null)
+            {
+                continue;
+            }
+
             velocity.X = x;
             velocity.Y = y;
         }

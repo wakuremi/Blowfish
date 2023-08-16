@@ -25,11 +25,21 @@ public sealed class TrackEntityUpdater : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        var updatables = controller.Entities
-            .WithModules<TrackModule, BoundsModule>();
+        var entities = controller.Entities;
 
-        foreach (var (_, track, bounds) in updatables)
+        for (var i = 0; i < entities.Count; i++)
         {
+            var entity = entities[i];
+
+            var track = entity.GetModuleIfHas<TrackModule>();
+            var bounds = entity.GetModuleIfHas<BoundsModule>();
+
+            if (track == null
+                || bounds == null)
+            {
+                continue;
+            }
+
             track.X = bounds.X;
             track.Y = bounds.Y;
         }

@@ -49,8 +49,10 @@ public sealed class EntityUpdaterAggregator : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        foreach (var updater in _updaters)
+        for (var i = 0; i < _updaters.Count; i++)
         {
+            var updater = _updaters[i];
+
             updater.Update(context, controller);
         }
     }

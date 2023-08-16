@@ -1,7 +1,6 @@
 ﻿using Blowfish.Common;
 using Blowfish.Framework;
 using System;
-using System.Collections.Immutable;
 
 namespace Blowfish.Engine.Entities;
 
@@ -10,8 +9,10 @@ namespace Blowfish.Engine.Entities;
 /// </summary>
 public sealed class Stage
 {
+    private readonly object _locker = new object();
+
     private readonly IEntityUpdater _updater;
-    private readonly ISnapshotFactory _snapshotFactory;
+    private readonly IEntityRenderer _renderer;
 
     private readonly EntityController _controller;
 
@@ -20,26 +21,26 @@ public sealed class Stage
     /// </summary>
     ///
     /// <param name="updater">Апдейтер сущностей.</param>
-    /// <param name="snapshotFactory">Фабрика снимков.</param>
+    /// <param name="renderer">Рендерер сущностей.</param>
     ///
     /// <exception cref="ArgumentNullException">
     ///   1. Указанный апдейтер сущностей <paramref name="updater" /> равен <see langword="null" />.
-    ///   2. Указанная фабрика снимков <paramref name="snapshotFactory" /> равна <see langword="null" />.
+    ///   2. Указанный рендерер сущностей <paramref name="renderer" /> равен <see langword="null" />.
     /// </exception>
     public Stage(
         IEntityUpdater updater,
-        ISnapshotFactory snapshotFactory
+        IEntityRenderer renderer
         )
     {
         #region Проверка аргументов ...
 
         Throw.IfNull(updater);
-        Throw.IfNull(snapshotFactory);
+        Throw.IfNull(renderer);
 
         #endregion Проверка аргументов ...
 
         _updater = updater;
-        _snapshotFactory = snapshotFactory;
+        _renderer = renderer;
 
         _controller = new EntityController();
     }
@@ -49,27 +50,35 @@ public sealed class Stage
     /// </summary>
     ///
     /// <param name="context">Контекст обновления.</param>
-    ///
-    /// <returns>
-    ///   Массив снимков.
-    /// </returns>
-    public ImmutableArray<ISnapshot> Update(UpdateContext context)
+    public void Update(UpdateContext context)
     {
         _updater.Update(context, _controller);
 
-        _controller.Commit();
-
-        var builder = ImmutableArray.CreateBuilder<ISnapshot>();
-
-        foreach (var entity in _controller.Entities)
+        // Блокируем контроллер на время фиксации изменений.
+        lock (_locker)
         {
-            var snapshot = _snapshotFactory.Create(entity);
-
-            builder.Add(snapshot);
+            _controller.Commit();
         }
+    }
 
-        var snapshots = builder.ToImmutable();
+    /// <summary>
+    ///   Выполняет отрисовку.
+    /// </summary>
+    ///
+    /// <param name="context">Контекст отрисовки.</param>
+    public void Render(RenderContext context)
+    {
+        // Блокируем контроллер на время отрисовки.
+        lock (_locker)
+        {
+            var entities = _controller.Entities;
 
-        return snapshots;
+            for (var i = 0; i < entities.Count; i++)
+            {
+                var entity = entities[i];
+
+                _renderer.Render(context, entity);
+            }
+        }
     }
 }

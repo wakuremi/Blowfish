@@ -47,42 +47,39 @@ public sealed class GameModule : NinjectModule
             .ToSelf()
             .InSingletonScope();
 
-        _ = Bind<ISnapshotFactory>()
-            .To<SnapshotFactoryAggregator>()
+        _ = Bind<IEntityRenderer>()
+            .To<EntityRendererAggregator>()
             .When(r =>
             {
                 // Чтобы агрегатор не инжектился сам в себя.
                 return r.Target == null
-                    || r.Target.Member.ReflectedType != typeof(SnapshotFactoryAggregator);
+                    || r.Target.Member.ReflectedType != typeof(EntityRendererAggregator);
             })
             .InSingletonScope();
 
-        _ = Bind<ISnapshotFactory>()
-            .To<CreatureSnapshotFactory>()
-            .WhenInjectedExactlyInto<SnapshotFactoryAggregator>()
+        _ = Bind<IEntityRenderer>()
+            .To<CreatureEntityRenderer>()
+            .WhenInjectedExactlyInto<EntityRendererAggregator>()
             .InSingletonScope();
 
-        _ = Bind<ISnapshotRenderer>()
-            .To<SnapshotRendererAggregator>()
+        _ = Bind<ICreatureRenderer>()
+            .To<CreatureRendererAggregator>()
             .When(r =>
             {
                 // Чтобы агрегатор не инжектился сам в себя.
                 return r.Target == null
-                    || r.Target.Member.ReflectedType != typeof(SnapshotRendererAggregator);
+                    || r.Target.Member.ReflectedType != typeof(CreatureRendererAggregator);
             })
-            .InSingletonScope();
-
-        _ = Bind<ISnapshotRenderer>()
-            .To<CreatureSnapshotRenderer>()
-            .WhenInjectedExactlyInto<SnapshotRendererAggregator>()
             .InSingletonScope();
 
         _ = Bind<ICreatureRenderer>()
             .To<PlayerCreatureRenderer>()
+            .WhenInjectedExactlyInto<CreatureRendererAggregator>()
             .InSingletonScope();
 
         _ = Bind<ICreatureRenderer>()
             .To<CrateCreatureRenderer>()
+            .WhenInjectedExactlyInto<CreatureRendererAggregator>()
             .InSingletonScope();
 
         // TODO: temp

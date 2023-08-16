@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 
 namespace Blowfish.Engine.Entities;
 
@@ -11,7 +11,7 @@ public interface IEntityController
     /// <summary>
     ///   Возвращает список сущностей.
     /// </summary>
-    ImmutableList<Entity> Entities
+    IReadOnlyList<Entity> Entities
     {
         get;
     }

@@ -1,25 +1,25 @@
 ﻿using Blowfish.Common;
-using System.Collections.Immutable;
+using System.Collections.Generic;
 
 namespace Blowfish.Engine.Entities;
 
 /// <inheritdoc cref="IEntityController" />
 public sealed class EntityController : IEntityController
 {
-    private ImmutableList<Entity> _modified;
+    private readonly List<Entity> _entities;
+    private readonly List<Entity> _modified;
 
     /// <inheritdoc />
-    public ImmutableList<Entity> Entities
-    {
-        get;
-        private set;
-    }
+    public IReadOnlyList<Entity> Entities => _entities;
 
     public EntityController()
     {
-        _modified = ImmutableList<Entity>.Empty;
+        // Очевидно, что список сущностей будет наполняться.
+        // Зададим некоторую емкость "по умолчанию".
+        const int Capacity = 16;
 
-        Entities = ImmutableList<Entity>.Empty;
+        _entities = new List<Entity>(Capacity);
+        _modified = new List<Entity>(Capacity);
     }
 
     /// <inheritdoc />
@@ -31,7 +31,7 @@ public sealed class EntityController : IEntityController
 
         #endregion Проверка аргументов ...
 
-        _modified = _modified.Add(entity);
+        _modified.Add(entity);
     }
 
     /// <inheritdoc />
@@ -43,7 +43,7 @@ public sealed class EntityController : IEntityController
 
         #endregion Проверка аргументов ...
 
-        _modified = _modified.Remove(entity);
+        _ = _modified.Remove(entity);
     }
 
     /// <summary>
@@ -51,6 +51,13 @@ public sealed class EntityController : IEntityController
     /// </summary>
     public void Commit()
     {
-        Entities = _modified;
+        _entities.Clear();
+
+        for (var i = 0; i < _modified.Count; i++)
+        {
+            var entity = _modified[i];
+
+            _entities.Add(entity);
+        }
     }
 }

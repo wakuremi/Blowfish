@@ -1,7 +1,8 @@
 ﻿using Blowfish.Common;
 using Blowfish.Common.Attributes;
+using Blowfish.Engine.Entities;
 using Blowfish.Engine.Graphics;
-using Blowfish.Framework.Graphics;
+using Blowfish.Framework;
 using System;
 
 namespace Blowfish.Game.Creatures.Renderers;
@@ -21,9 +22,7 @@ public sealed class CrateCreatureRenderer : ICreatureRenderer
     /// <exception cref="ArgumentNullException">
     ///   Указанный набор спрайтов <paramref name="spriteSheet" /> равен <see langword="null" />.
     /// </exception>
-    public CrateCreatureRenderer(
-        SpriteSheet spriteSheet
-        )
+    public CrateCreatureRenderer(SpriteSheet spriteSheet)
     {
         #region Проверка аргументов ...
 
@@ -35,19 +34,14 @@ public sealed class CrateCreatureRenderer : ICreatureRenderer
     }
 
     /// <inheritdoc />
-    public void Render(IRenderer renderer, CreatureTypeEnum type, float x, float y, float width, float height)
+    public void Render(RenderContext context, Entity entity, float x, float y, float width, float height)
     {
         #region Проверка аргументов ...
 
-        Throw.IfNull(renderer);
+        Throw.IfNull(entity);
 
         #endregion Проверка аргументов ...
 
-        if (type != CreatureTypeEnum.Crate)
-        {
-            throw new InvalidOperationException("Некорректный тип существа.");
-        }
-
-        _spriteSheet.Render(renderer, 5, x , y, width, height);
+        _spriteSheet.Render(context.Renderer, 5, x, y, width, height);
     }
 }

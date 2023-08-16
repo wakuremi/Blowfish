@@ -25,11 +25,21 @@ public sealed class MovementEntityUpdater : IEntityUpdater
 
         #endregion Проверка аргументов ...
 
-        var updatables = controller.Entities
-            .WithModules<BoundsModule, VelocityModule>();
+        var entities = controller.Entities;
 
-        foreach (var (_, bounds, velocity) in updatables)
+        for (var i = 0; i < entities.Count; i++)
         {
+            var entity = entities[i];
+
+            var bounds = entity.GetModuleIfHas<BoundsModule>();
+            var velocity = entity.GetModuleIfHas<VelocityModule>();
+
+            if (bounds == null
+                || velocity == null)
+            {
+                continue;
+            }
+
             bounds.X += velocity.X;
             bounds.Y += velocity.Y;
         }
