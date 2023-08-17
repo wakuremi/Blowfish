@@ -9,8 +9,6 @@ namespace Blowfish.Engine.Entities;
 /// </summary>
 public sealed class Stage
 {
-    private readonly object _locker = new object();
-
     private readonly IEntityUpdater _updater;
     private readonly IEntityRenderer _renderer;
 
@@ -54,11 +52,7 @@ public sealed class Stage
     {
         _updater.Update(context, _controller);
 
-        // Блокируем контроллер на время фиксации изменений.
-        lock (_locker)
-        {
-            _controller.Commit();
-        }
+        _controller.Commit();
     }
 
     /// <summary>
@@ -68,17 +62,13 @@ public sealed class Stage
     /// <param name="context">Контекст отрисовки.</param>
     public void Render(RenderContext context)
     {
-        // Блокируем контроллер на время отрисовки.
-        lock (_locker)
+        var entities = _controller.Entities;
+
+        for (var i = 0; i < entities.Count; i++)
         {
-            var entities = _controller.Entities;
+            var entity = entities[i];
 
-            for (var i = 0; i < entities.Count; i++)
-            {
-                var entity = entities[i];
-
-                _renderer.Render(context, entity);
-            }
+            _renderer.Render(context, entity);
         }
     }
 }
