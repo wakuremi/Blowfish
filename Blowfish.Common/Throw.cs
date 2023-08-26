@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
@@ -20,8 +22,8 @@ public static class Throw
     ///   Указанное значение <paramref name="name" /> равно <see langword="null" />.
     /// </exception>
     public static void IfNull<T>(
-        T? value,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        T value,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
         if (value is null)
@@ -47,15 +49,10 @@ public static class Throw
     ///   Указанный список <paramref name="list" /> содержит <see langword="null" />.
     /// </exception>
     public static void IfHasNull<T>(
-        IReadOnlyList<T?>? list,
-        [CallerArgumentExpression(nameof(list))] string? name = null
+        IReadOnlyList<T> list,
+        [CallerArgumentExpression(nameof(list))] string name = null
         )
     {
-        if (list is null)
-        {
-            throw new NullReferenceException("Указанный список равен 'null'.");
-        }
-
         for (var i = 0; i < list.Count; i++)
         {
             if (list[i] is null)
@@ -83,16 +80,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> меньше другого <paramref name="other" />.
     /// </exception>
     public static void IfLess<T>(
-        IComparable<T>? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(other) < 0)
         {
             throw new ArgumentException($"Указанное значение {value} меньше {other}.", name);
@@ -117,16 +109,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> меньше другого <paramref name="other" />.
     /// </exception>
     public static void IfLessOrEqual<T>(
-        IComparable<T>? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(other) <= 0)
         {
             throw new ArgumentException($"Указанное значение {value} меньше {other} или равно ему.", name);
@@ -151,16 +138,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> больше другого <paramref name="other" />.
     /// </exception>
     public static void IfGreater<T>(
-        IComparable<T>? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(other) > 0)
         {
             throw new ArgumentException($"Указанное значение {value} больше {other}.", name);
@@ -185,16 +167,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> больше другого <paramref name="other" />.
     /// </exception>
     public static void IfGreaterOrEqual<T>(
-        IComparable<T>? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(other) >= 0)
         {
             throw new ArgumentException($"Указанное значение {value} больше {other} или равно ему.", name);
@@ -219,16 +196,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> равно другому <paramref name="other" />.
     /// </exception>
     public static void IfEqual<T>(
-        IComparable<T>? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(other) != 0)
         {
             throw new ArgumentException($"Указанное значение {value} равно {other}.", name);
@@ -253,16 +225,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> равно другому <paramref name="other" />.
     /// </exception>
     public static void IfEqual<T>(
-        T? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        T value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.Equals(other))
         {
             throw new ArgumentException($"Указанное значение {value} равно {other}.", name);
@@ -287,16 +254,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> не равно другому <paramref name="other" />.
     /// </exception>
     public static void IfNotEqual<T>(
-        IComparable<T>? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(other) == 0)
         {
             throw new ArgumentException($"Указанное значение {value} не равно {other}.", name);
@@ -321,16 +283,11 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> не равно другому <paramref name="other" />.
     /// </exception>
     public static void IfNotEqual<T>(
-        T? value,
-        T? other,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        T value,
+        T other,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (!value.Equals(other))
         {
             throw new ArgumentException($"Указанное значение {value} не равно {other}.", name);
@@ -356,17 +313,12 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> больше или равно <paramref name="a" /> или меньше <paramref name="b" />.
     /// </exception>
     public static void InInRange<T>(
-        IComparable<T>? value,
-        T? a,
-        T? b,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T a,
+        T b,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(a) >= 0
             || value.CompareTo(b) < 0)
         {
@@ -393,17 +345,12 @@ public static class Throw
     ///   Указанное значение <paramref name="value" /> меньше <paramref name="a" /> или больше или равно <paramref name="b" />.
     /// </exception>
     public static void IfOutOfRange<T>(
-        IComparable<T>? value,
-        T? a,
-        T? b,
-        [CallerArgumentExpression(nameof(value))] string? name = null
+        IComparable<T> value,
+        T a,
+        T b,
+        [CallerArgumentExpression(nameof(value))] string name = null
         )
     {
-        if (value is null)
-        {
-            throw new NullReferenceException("Указанное значение равно 'null'.");
-        }
-
         if (value.CompareTo(a) < 0
             || value.CompareTo(b) >= 0)
         {
