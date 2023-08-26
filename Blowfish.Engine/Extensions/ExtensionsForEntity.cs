@@ -1,7 +1,6 @@
 ﻿using Blowfish.Common;
 using Blowfish.Engine.Entities;
 using System;
-using System.Collections.Immutable;
 
 namespace Blowfish.Engine.Extensions;
 
@@ -11,15 +10,15 @@ namespace Blowfish.Engine.Extensions;
 public static class ExtensionsForEntity
 {
     /// <summary>
-    ///   Возвращает модуль указанного типа.
+    ///   Возвращает компонент указанного типа.
     /// </summary>
     ///
-    /// <typeparam name="T">Тип модуля.</typeparam>
+    /// <typeparam name="T">Тип компонента.</typeparam>
     ///
     /// <param name="entity">Сущность.</param>
     ///
     /// <returns>
-    ///   Модуль.
+    ///   Компонент.
     /// </returns>
     ///
     /// <exception cref="ArgumentNullException">
@@ -27,12 +26,12 @@ public static class ExtensionsForEntity
     /// </exception>
     ///
     /// <exception cref="InvalidOperationException">
-    ///   Модуль указанного типа отсутствует.
+    ///   Компонент указанного типа отсутствует.
     /// </exception>
-    public static T GetModule<T>(
+    public static T GetComponent<T>(
         this Entity entity
         )
-        where T : IModule
+        where T : IComponent
     {
         #region Проверка аргументов ...
 
@@ -42,33 +41,33 @@ public static class ExtensionsForEntity
 
         var type = typeof(T);
 
-        if (!entity.Modules.TryGetValue(type, out var module))
+        if (!entity.Components.TryGetValue(type, out var component))
         {
-            throw new InvalidOperationException("Модуль указанного типа отсутствует.");
+            throw new InvalidOperationException("Компонент указанного типа отсутствует.");
         }
 
-        return (T) module;
+        return (T) component;
     }
 
     /// <summary>
-    ///   Возвращает модуль указанного типа.
+    ///   Возвращает компонент указанного типа.
     /// </summary>
     ///
-    /// <typeparam name="T">Тип модуля.</typeparam>
+    /// <typeparam name="T">Тип компонента.</typeparam>
     ///
     /// <param name="entity">Сущность.</param>
     ///
     /// <returns>
-    ///   Модуль или <see langword="null" />, если таковой отсутствует.
+    ///   Компонент или <see langword="null" />, если таковой отсутствует.
     /// </returns>
     ///
     /// <exception cref="ArgumentNullException">
     ///   Указанная сущность <paramref name="entity" /> равна <see langword="null" />.
     /// </exception>
-    public static T? GetModuleIfHas<T>(
+    public static T? GetComponentIfHas<T>(
         this Entity entity
         )
-        where T : IModule
+        where T : IComponent
     {
         #region Проверка аргументов ...
 
@@ -78,19 +77,19 @@ public static class ExtensionsForEntity
 
         var type = typeof(T);
 
-        if (!entity.Modules.TryGetValue(type, out var module))
+        if (!entity.Components.TryGetValue(type, out var component))
         {
             return default;
         }
 
-        return (T) module;
+        return (T) component;
     }
 
     /// <summary>
-    ///   Определяет, есть ли модуль указанного типа.
+    ///   Определяет, есть ли компонент указанного типа.
     /// </summary>
     ///
-    /// <typeparam name="T">Тип модуля.</typeparam>
+    /// <typeparam name="T">Тип компонента.</typeparam>
     ///
     /// <param name="entity">Сущность.</param>
     ///
@@ -101,10 +100,10 @@ public static class ExtensionsForEntity
     /// <exception cref="ArgumentNullException">
     ///   Указанная сущность <paramref name="entity" /> равна <see langword="null" />.
     /// </exception>
-    public static bool HasModule<T>(
+    public static bool HasComponent<T>(
         this Entity entity
         )
-        where T : IModule
+        where T : IComponent
     {
         #region Проверка аргументов ...
 
@@ -114,8 +113,8 @@ public static class ExtensionsForEntity
 
         var type = typeof(T);
 
-        var hasModule = entity.Modules.ContainsKey(type);
+        var hasComponent = entity.Components.ContainsKey(type);
 
-        return hasModule;
+        return hasComponent;
     }
 }

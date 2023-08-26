@@ -1,8 +1,8 @@
 ﻿namespace Blowfish.Engine.Entities;
 
 /// <summary>
-///   Модуль.
+///   Компонент.
 /// </summary>
-public interface IModule
+public interface IComponent
 {
 }
