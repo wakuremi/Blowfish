@@ -7,7 +7,7 @@ namespace Blowfish.Framework;
 /// <summary>
 ///   Контекст обновления.
 /// </summary>
-public readonly struct UpdateContext
+public readonly ref struct UpdateContext
 {
     // Это структура! Убедитесь, что параметрический конструктор будет вызван!
 

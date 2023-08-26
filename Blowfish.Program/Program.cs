@@ -1,5 +1,4 @@
-﻿using Blowfish.Engine;
-using Blowfish.Program.Composition;
+﻿using Blowfish.Program.Composition;
 using log4net;
 using log4net.Config;
 using System;
@@ -23,7 +22,7 @@ public static class Program
         {
             using (var root = new Root())
             {
-                var application = root.Get<Application>();
+                var application = root.GetApplication();
                 application.Run();
             }
         }

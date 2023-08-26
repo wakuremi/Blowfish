@@ -1,4 +1,5 @@
-﻿using Blowfish.Program.Composition.Modules;
+﻿using Blowfish.Engine;
+using Blowfish.Program.Composition.Modules;
 using Ninject;
 using System;
 
@@ -25,32 +26,30 @@ public sealed class Root : IDisposable
     }
 
     /// <summary>
-    ///   Возвращает объект указанного типа.
+    ///   Возвращает приложение.
     /// </summary>
     ///
-    /// <typeparam name="T">Тип объекта.</typeparam>
-    ///
     /// <returns>
-    ///   Объект.
+    ///   Приложение.
     /// </returns>
     ///
     /// <exception cref="InvalidOperationException">
     ///   Ошибка при резолвинге.
     /// </exception>
-    public T Get<T>()
+    public Application GetApplication()
     {
-        T instance;
+        Application application;
 
         try
         {
-            instance = _kernel.Get<T>();
+            application = _kernel.Get<Application>();
         }
         catch (Exception exception)
         {
             throw new InvalidOperationException("Ошибка при резолвинге.", exception);
         }
 
-        return instance;
+        return application;
     }
 
     /// <inheritdoc />
