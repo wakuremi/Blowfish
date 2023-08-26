@@ -17,10 +17,6 @@ public interface IRenderer
     /// <exception cref="ArgumentNullException">
     ///   Указанный объект для отрисовки <paramref name="renderable" /> равен <see langword="null" />.
     /// </exception>
-    ///
-    /// <exception cref="InvalidOperationException">
-    ///   Ошибка отрисовки.
-    /// </exception>
     void Render(IRenderable renderable);
 
     /// <summary>
@@ -29,9 +25,5 @@ public interface IRenderer
     ///
     /// <param name="x">Позиция точки по оси X.</param>
     /// <param name="y">Позиция точки по оси Y.</param>
-    ///
-    /// <exception cref="InvalidOperationException">
-    ///   Ошибка перемещения.
-    /// </exception>
     void Translate(float x, float y);
 }

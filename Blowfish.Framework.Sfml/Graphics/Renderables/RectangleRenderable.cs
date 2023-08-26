@@ -1,7 +1,6 @@
 ﻿using Blowfish.Framework.Graphics.Renderables;
 using SFML.Graphics;
 using SFML.System;
-using System;
 using System.Threading;
 
 namespace Blowfish.Framework.Sfml.Graphics.Renderables;
@@ -24,52 +23,43 @@ public sealed class RectangleRenderable : IRectangleRenderable, Drawable
     /// <inheritdoc />
     public void SetLocation(float x, float y)
     {
-        ThrowIfDisposed();
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
 
         var position = new Vector2f(x, y);
 
-        try
-        {
-            _rectangle.Position = position;
-        }
-        catch (Exception exception)
-        {
-            throw new InvalidOperationException("Не удалось установить позицию.", exception);
-        }
+        _rectangle.Position = position;
     }
 
     /// <inheritdoc />
     public void SetSize(float width, float height)
     {
-        ThrowIfDisposed();
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
 
         var size = new Vector2f(width, height);
 
-        try
-        {
-            _rectangle.Size = size;
-        }
-        catch (Exception exception)
-        {
-            throw new InvalidOperationException("Не удалось установить размер.", exception);
-        }
+        _rectangle.Size = size;
     }
 
     /// <inheritdoc />
     public void SetColor(byte r, byte g, byte b)
     {
-        ThrowIfDisposed();
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
 
         var color = new Color(r, g, b);
 
-        try
-        {
-            _rectangle.FillColor = color;
-        }
-        catch (Exception exception)
-        {
-            throw new InvalidOperationException("Не удалось установить цвет.", exception);
-        }
+        _rectangle.FillColor = color;
     }
 
     /// <inheritdoc />
@@ -83,18 +73,21 @@ public sealed class RectangleRenderable : IRectangleRenderable, Drawable
         _rectangle.Dispose();
     }
 
-    private void ThrowIfDisposed()
+    private bool IsDisposed()
     {
-        if (Interlocked.Read(ref _isDisposed) != 0L)
-        {
-            throw new ObjectDisposedException(nameof(RectangleRenderable));
-        }
+        return Interlocked.Read(ref _isDisposed) == 1L;
     }
 
     /// <inheritdoc />
     public void Draw(RenderTarget target, RenderStates states)
     {
-        // Никаких проверок не делаем - передаем как есть.
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
+
+        // Никаких проверок аргументов не делаем - передаем как есть.
         _rectangle.Draw(target, states);
     }
 }

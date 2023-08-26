@@ -51,35 +51,17 @@ public sealed class Renderer : IRenderer
         // Кривовато, но как сделать лучше - пока не придумал.
         if (renderable is Drawable drawable)
         {
-            try
-            {
-                _target.Draw(drawable);
-            }
-            catch (Exception exception)
-            {
-                throw new InvalidOperationException("Ошибка отрисовки.", exception);
-            }
-        }
-        else
-        {
-            throw new InvalidOperationException($"Ошибка отрисовки: указанный объект не реализует {nameof(Drawable)}.");
+            _target.Draw(drawable);
         }
     }
 
     /// <inheritdoc />
     public void Translate(float x, float y)
     {
-        try
-        {
-            var offset = new Vector2f(x, y);
+        var offset = new Vector2f(x, y);
 
-            _view.Move(offset);
+        _view.Move(offset);
 
-            _target.SetView(_view);
-        }
-        catch (Exception exception)
-        {
-            throw new InvalidOperationException("Ошибка перемещения.", exception);
-        }
+        _target.SetView(_view);
     }
 }

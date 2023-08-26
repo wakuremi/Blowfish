@@ -86,8 +86,7 @@ public static class TargetAttributeHelper
 
         var dictionary = sources
             .SelectMany(
-                x => GetTargets<TTarget, TSource>(x)
-                    .Select(y => (Target: y, Source: x))
+                x => GetTargets<TTarget, TSource>(x).Select(y => (Target: y, Source: x))
                 )
             .GroupBy(x => x.Target)
             .ToImmutableDictionary(

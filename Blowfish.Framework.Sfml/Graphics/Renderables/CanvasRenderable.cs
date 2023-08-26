@@ -59,35 +59,29 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
     /// <inheritdoc />
     public void SetLocation(float x, float y)
     {
-        ThrowIfDisposed();
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
 
         var position = new Vector2f(x, y);
 
-        try
-        {
-            _sprite.Position = position;
-        }
-        catch (Exception exception)
-        {
-            throw new InvalidOperationException("Не удалось установить позицию.", exception);
-        }
+        _sprite.Position = position;
     }
 
     /// <inheritdoc />
     public void SetSize(float width, float height)
     {
-        ThrowIfDisposed();
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
 
         var scale = new Vector2f(width / _sprite.TextureRect.Width, height / _sprite.TextureRect.Height);
 
-        try
-        {
-            _sprite.Scale = scale;
-        }
-        catch (Exception exception)
-        {
-            throw new InvalidOperationException("Не удалось установить размер.", exception);
-        }
+        _sprite.Scale = scale;
     }
 
     /// <inheritdoc />
@@ -102,12 +96,11 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
         _texture.Dispose();
     }
 
-    private void ThrowIfDisposed()
+    private bool IsDisposed()
     {
-        if (Interlocked.Read(ref _isDisposed) != 0L)
-        {
-            throw new ObjectDisposedException(nameof(PictureRenderable));
-        }
+        var isDisposed = Interlocked.Read(ref _isDisposed) == 1L;
+
+        return isDisposed;
     }
 
     /// <inheritdoc />
@@ -131,7 +124,13 @@ public sealed class CanvasRenderable : ICanvasRenderable, Drawable
     /// <inheritdoc />
     public void Draw(RenderTarget target, RenderStates states)
     {
-        // Никаких проверок не делаем - передаем как есть.
+        // Если объект уничтожен, то ничего не делаем.
+        if (IsDisposed())
+        {
+            return;
+        }
+
+        // Никаких проверок аргументов не делаем - передаем как есть.
         _sprite.Draw(target, states);
     }
 }
