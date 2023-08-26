@@ -25,6 +25,10 @@ public sealed class EngineModule : NinjectModule
             .ToSelf()
             .InSingletonScope();
 
+        _ = Bind<TileMapFactory>()
+            .ToSelf()
+            .InSingletonScope();
+
         _ = Bind<Stage>()
             .ToSelf()
             .InSingletonScope();
