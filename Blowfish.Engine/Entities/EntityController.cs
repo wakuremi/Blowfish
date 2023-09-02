@@ -12,6 +12,9 @@ public sealed class EntityController : IEntityController
     /// <inheritdoc />
     public IReadOnlyList<Entity> Entities => _entities;
 
+    /// <summary>
+    ///   Создает контроллер сущностей.
+    /// </summary>
     public EntityController()
     {
         // Очевидно, что список сущностей будет наполняться.

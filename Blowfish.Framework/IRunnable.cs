@@ -5,10 +5,6 @@ namespace Blowfish.Framework;
 /// <summary>
 ///   Объект для выполнения.
 /// </summary>
-///
-/// <remarks>
-///   Не является потокобезопасным, поэтому требует последовательного выполнение обновления и отрисовки.
-/// </remarks>
 public interface IRunnable
 {
     /// <summary>
