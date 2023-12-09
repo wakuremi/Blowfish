@@ -1,8 +1,9 @@
 <Project>
-   <PropertyGroup>
-     <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
-     <LangVersion>Latest</LangVersion>
-     <Nullable>enable</Nullable>
-     <WarningsAsErrors>nullable;CS8766;CS8767</WarningsAsErrors>
-   </PropertyGroup>
- </Project>
+  <PropertyGroup>
+      <TargetFramework>net8.0</TargetFramework>
+      <DisableTransitiveProjectReferences>true</DisableTransitiveProjectReferences>
+      <LangVersion>Latest</LangVersion>
+      <Nullable>enable</Nullable>
+      <WarningsAsErrors>nullable;CS8766;CS8767</WarningsAsErrors>
+  </PropertyGroup>
+</Project>
